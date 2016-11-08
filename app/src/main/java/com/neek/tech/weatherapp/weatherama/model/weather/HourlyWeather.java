@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -415,5 +416,37 @@ public class HourlyWeather implements Serializable {
             this.precipType = precipType;
         }
 
+
+        @Override
+        public String toString() {
+            return "HourlyData{" +
+                    "time=" + time + '\n' +
+                    ", summary='" + summary + '\n' +
+                    ", icon='" + icon + '\n' +
+                    ", precipIntensity=" + precipIntensity + '\n' +
+                    ", precipProbability=" + precipProbability + '\n' +
+                    ", temperature=" + temperature + '\n' +
+                    ", apparentTemperature=" + apparentTemperature + '\n' +
+                    ", dewPoint=" + dewPoint + '\n' +
+                    ", humidity=" + humidity + '\n' +
+                    ", windSpeed=" + windSpeed + '\n' +
+                    ", windBearing=" + windBearing + '\n' +
+                    ", visibility=" + visibility + '\n' +
+                    ", cloudCover=" + cloudCover + '\n' +
+                    ", pressure=" + pressure + '\n' +
+                    ", ozone=" + ozone + '\n' +
+                    ", precipType='" + precipType + '\n' +
+                    '}';
+        }
+    }
+
+
+    @Override
+    public String toString() {
+        return "HourlyWeather{" +
+                "summary='" + summary + '\n' +
+                ", icon='" + icon + '\n' +
+                ", data=" + Arrays.asList(data.toArray()) + '\n' +
+                '}';
     }
 }

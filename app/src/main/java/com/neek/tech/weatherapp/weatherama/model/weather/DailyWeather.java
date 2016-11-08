@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -632,6 +633,48 @@ public class DailyWeather implements Serializable {
             this.precipType = precipType;
         }
 
+
+        @Override
+        public String toString() {
+            return "DailyData{" +
+                    "time=" + time + '\n' +
+                    ", summary='" + summary + '\n' +
+                    ", icon='" + icon + '\n' +
+                    ", sunriseTime=" + sunriseTime + '\n' +
+                    ", sunsetTime=" + sunsetTime + '\n' +
+                    ", moonPhase=" + moonPhase + '\n' +
+                    ", precipIntensity=" + precipIntensity + '\n' +
+                    ", precipIntensityMax=" + precipIntensityMax + '\n' +
+                    ", precipProbability=" + precipProbability + '\n' +
+                    ", temperatureMin=" + temperatureMin + '\n' +
+                    ", temperatureMinTime=" + temperatureMinTime + '\n' +
+                    ", temperatureMax=" + temperatureMax + '\n' +
+                    ", temperatureMaxTime=" + temperatureMaxTime + '\n' +
+                    ", apparentTemperatureMin=" + apparentTemperatureMin + '\n' +
+                    ", apparentTemperatureMinTime=" + apparentTemperatureMinTime + '\n' +
+                    ", apparentTemperatureMax=" + apparentTemperatureMax + '\n' +
+                    ", apparentTemperatureMaxTime=" + apparentTemperatureMaxTime + '\n' +
+                    ", dewPoint=" + dewPoint + '\n' +
+                    ", humidity=" + humidity + '\n' +
+                    ", windSpeed=" + windSpeed + '\n' +
+                    ", windBearing=" + windBearing + '\n' +
+                    ", visibility=" + visibility + '\n' +
+                    ", cloudCover=" + cloudCover + '\n' +
+                    ", pressure=" + pressure + '\n' +
+                    ", ozone=" + ozone + '\n' +
+                    ", precipIntensityMaxTime=" + precipIntensityMaxTime + '\n' +
+                    ", precipType='" + precipType + '\n' +
+                    '}';
+        }
     }
 
+
+    @Override
+    public String toString() {
+        return "DailyWeather{" +
+                "summary='" + summary + '\n' +
+                ", icon='" + icon + '\n' +
+                ", data=" + Arrays.asList(data.toArray()) + '\n' +
+                '}';
+    }
 }

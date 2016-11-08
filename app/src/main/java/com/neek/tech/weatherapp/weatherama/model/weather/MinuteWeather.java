@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -139,5 +140,24 @@ public class MinuteWeather implements Serializable {
             this.precipProbability = precipProbability;
         }
 
+
+        @Override
+        public String toString() {
+            return "MinuteData{" +
+                    "time=" + time + '\n' +
+                    ", precipIntensity=" + precipIntensity + '\n' +
+                    ", precipProbability=" + precipProbability + '\n' +
+                    '}';
+        }
+    }
+
+
+    @Override
+    public String toString() {
+        return "MinuteWeather{" +
+                "summary='" + summary + '\n' +
+                ", icon='" + icon + '\n' +
+                ", data=" + Arrays.asList(data.toArray()) + '\n' +
+                '}';
     }
 }
