@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--&lt;!&ndash; Start: Workaround to avoid flickering on start animation &ndash;&gt; -->
+    <!--<objectAnimator-->
+        <!--android:valueFrom="1.0"-->
+        <!--android:valueTo="0.0"-->
+        <!--android:propertyName="alpha"-->
+        <!--android:duration="0" />-->
+    <!--<objectAnimator-->
+        <!--android:valueFrom="0.0"-->
+        <!--android:valueTo="1.0"-->
+        <!--android:propertyName="alpha"-->
+        <!--android:startOffset="1"-->
+        <!--android:duration="0" />-->
+    <!--&lt;!&ndash; End: Workaround to avoid flickering on start animation &ndash;&gt; -->
+    <!---->
+    <!--<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--android:propertyName="xFraction" -->
+        <!--android:valueType="floatType"-->
+        <!--android:valueFrom="1"-->
+        <!--android:valueTo="0" -->
+        <!--android:duration="500" -->
+        <!--/>-->
+ 
+    <translate
+    	android:fromXDelta="100%"
+    	android:toXDelta="0%"
+        android:fromYDelta="0%"
+        android:toYDelta="0%"
+        android:duration="@integer/card_slide_transition_time"/>
+
+</set>
