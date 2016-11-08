@@ -65,7 +65,7 @@ public class WeatherService {
                             mWeatherUpdater.onWeatherDataRetrieved(Json.fromJson(response.body().charStream(), Weather.class));
                         }
                     } catch (JsonSyntaxException e) {
-                        Logger.e("WeatherService", e);
+                        Logger.logException("WeatherService", e);
                     }
 
                 }

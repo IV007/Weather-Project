@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.neek.tech.weatherapp.weatherama.base.BaseFragment;
+import com.neek.tech.weatherapp.weatherama.controllers.WeatherController;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 
 /**
@@ -17,6 +18,7 @@ public class HomeFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Logger.create(TAG);
+
     }
 
     @Override

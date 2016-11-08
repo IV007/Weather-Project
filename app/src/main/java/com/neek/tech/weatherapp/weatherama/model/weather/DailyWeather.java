@@ -84,13 +84,13 @@ public class DailyWeather implements Serializable {
         private double moonPhase;
 
         @SerializedName("precipIntensity")
-        private int precipIntensity;
+        private double precipIntensity;
 
         @SerializedName("precipIntensityMax")
-        private int precipIntensityMax;
+        private double precipIntensityMax;
 
         @SerializedName("precipProbability")
-        private int precipProbability;
+        private double precipProbability;
 
         @SerializedName("temperatureMin")
         private double temperatureMin;
@@ -259,7 +259,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The precipIntensity
          */
-        public int getPrecipIntensity() {
+        public double getPrecipIntensity() {
             return precipIntensity;
         }
 
@@ -268,7 +268,7 @@ public class DailyWeather implements Serializable {
          * @param precipIntensity
          * The precipIntensity
          */
-        public void setPrecipIntensity(int precipIntensity) {
+        public void setPrecipIntensity(double precipIntensity) {
             this.precipIntensity = precipIntensity;
         }
 
@@ -277,7 +277,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The precipIntensityMax
          */
-        public int getPrecipIntensityMax() {
+        public double getPrecipIntensityMax() {
             return precipIntensityMax;
         }
 
@@ -286,7 +286,7 @@ public class DailyWeather implements Serializable {
          * @param precipIntensityMax
          * The precipIntensityMax
          */
-        public void setPrecipIntensityMax(int precipIntensityMax) {
+        public void setPrecipIntensityMax(double precipIntensityMax) {
             this.precipIntensityMax = precipIntensityMax;
         }
 
@@ -295,7 +295,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The precipProbability
          */
-        public int getPrecipProbability() {
+        public double getPrecipProbability() {
             return precipProbability;
         }
 
@@ -304,7 +304,7 @@ public class DailyWeather implements Serializable {
          * @param precipProbability
          * The precipProbability
          */
-        public void setPrecipProbability(int precipProbability) {
+        public void setPrecipProbability(double precipProbability) {
             this.precipProbability = precipProbability;
         }
 

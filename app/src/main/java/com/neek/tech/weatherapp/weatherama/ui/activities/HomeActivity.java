@@ -68,4 +68,9 @@ public class HomeActivity extends BaseActivity implements
         }
     }
 
+
+    @Override
+    protected int getIdRootFragmentContainer() {
+        return 0;
+    }
 }

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.neek.tech.weatherapp.R;
-import com.neek.tech.weatherapp.weatherama.WeatherApplication;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 import com.neek.tech.weatherapp.weatherama.utilities.WeatherErrorDialog;
 
@@ -25,18 +24,15 @@ public abstract class BaseActivity extends FragmentActivity implements BaseView 
 
     private View progressIndicator;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWeatherApplication().setCurrentActivity(this);
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        getWeatherApplication().setCurrentActivity(this);
 
         initializeProgressIndicator();
     }
@@ -182,7 +178,7 @@ public abstract class BaseActivity extends FragmentActivity implements BaseView 
             invalidateOptionsMenu();
 
         } catch (Exception exception) {
-            Logger.logException(BaseActivity.class.getSimpleName(), exception);
+            Logger.logException(TAG, exception);
         }
 
     }
@@ -191,10 +187,5 @@ public abstract class BaseActivity extends FragmentActivity implements BaseView 
      * Returns an int of the container to attach fragments
      */
     protected abstract int getIdRootFragmentContainer();
-
-
-    private WeatherApplication getWeatherApplication(){
-        return (WeatherApplication) getApplication();
-    }
 
 }

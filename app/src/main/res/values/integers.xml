@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="card_slide_transition_time">350</integer>
+    <integer name="card_updown_transition_time">@android:integer/config_mediumAnimTime</integer>
+
+</resources>

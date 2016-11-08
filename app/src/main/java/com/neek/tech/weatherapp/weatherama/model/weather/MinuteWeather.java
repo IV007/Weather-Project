@@ -1,6 +1,5 @@
 package com.neek.tech.weatherapp.weatherama.model.weather;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -13,13 +12,12 @@ import java.util.List;
 public class MinuteWeather implements Serializable {
 
     @SerializedName("summary")
-    @Expose
     private String summary;
+
     @SerializedName("icon")
-    @Expose
     private String icon;
+
     @SerializedName("data")
-    @Expose
     private List<MinuteData> data = new ArrayList<>();
 
     /**
@@ -79,13 +77,12 @@ public class MinuteWeather implements Serializable {
     private class MinuteData implements Serializable  {
 
         @SerializedName("time")
-        @Expose
         private Integer time;
+
         @SerializedName("precipIntensity")
-        @Expose
         private Integer precipIntensity;
+
         @SerializedName("precipProbability")
-        @Expose
         private Integer precipProbability;
 
         /**

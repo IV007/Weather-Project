@@ -1,6 +1,5 @@
 package com.neek.tech.weatherapp.weatherama.base;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -47,14 +46,7 @@ public abstract class BaseFragment extends Fragment implements BaseView {
 
     @CheckForNull
     protected BaseActivity getBaseActivity() {
-
-        Activity activity = getActivity();
-        if (activity instanceof BaseActivity) {
-            return (BaseActivity) activity;
-        }
-
-        return getWeatherApplication().getCurrentActivity();
-
+        return (BaseActivity) getActivity();
     }
 
 
@@ -73,16 +65,23 @@ public abstract class BaseFragment extends Fragment implements BaseView {
 
     @Override
     public void onError(String title, String errorMessage) {
-
+        if (getActivity() != null && getActivity() instanceof BaseActivity){
+            ((BaseActivity) getActivity()).showErrorDialog(title, errorMessage);
+        }
     }
 
     @Override
     public void showProgressDialog() {
+        if (getActivity() != null && getActivity() instanceof BaseActivity) {
+            ((BaseActivity) getActivity()).showProgressDialog();
+        }
 
     }
 
     @Override
     public void hideProgressDialog() {
-
+        if (getActivity() != null && getActivity() instanceof BaseActivity) {
+            ((BaseActivity) getActivity()).showProgressDialog();
+        }
     }
 }
