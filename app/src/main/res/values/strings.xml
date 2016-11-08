@@ -4,4 +4,9 @@
     <string name="network_unavailable_message">Please check your network settings.</string>
     <string name="okhttp_error_title">Something\'s up</string>
     <string name="okhttp_error_message">For some reason we couldn\'t retrieve weather info, \nplease refresh or try again later</string>
+
+    <string name="current_conditions">Now</string>
+    <string name="minutely_conditions">Minutely</string>
+    <string name="hourly_conditions">Hourly</string>
+    <string name="daily_conditions">7-Days</string>
 </resources>

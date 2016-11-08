@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.base.BaseFragment;
 import com.neek.tech.weatherapp.weatherama.model.weather.MinuteWeather;
 import com.neek.tech.weatherapp.weatherama.model.weather.Weather;
@@ -57,7 +58,7 @@ public class MinutelyConditionsFragment extends BaseFragment implements HomeActi
 
     @Override
     protected int onCreateViewId() {
-        return 0;
+        return R.layout.fragment_conditions_minutely;
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.neek.tech.weatherapp.weatherama.base.BaseActivity;
 import com.neek.tech.weatherapp.weatherama.controllers.WeatherController;
 import com.neek.tech.weatherapp.weatherama.model.weather.Weather;
 import com.neek.tech.weatherapp.weatherama.ui.HomeActivityListener;
+import com.neek.tech.weatherapp.weatherama.ui.fragments.HomeFragment;
 import com.neek.tech.weatherapp.weatherama.utilities.Constants;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 import com.neek.tech.weatherapp.weatherama.utilities.NetworkUtils;
@@ -29,7 +30,6 @@ public class HomeActivity extends BaseActivity implements
         Logger.create(TAG);
 
         setContentView(R.layout.activity_home);
-
     }
 
     @Override
@@ -59,6 +59,7 @@ public class HomeActivity extends BaseActivity implements
                 hideProgressDialog();
 
                 if (weather != null) {
+                    navigateToFragment(HomeFragment.newInstance(weather));
 
                     if (mHomeActivityListener != null) {
                         for (HomeActivityListener listener : mHomeActivityListener) {

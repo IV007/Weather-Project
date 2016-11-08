@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.base.BaseFragment;
 import com.neek.tech.weatherapp.weatherama.model.weather.HourlyWeather;
 import com.neek.tech.weatherapp.weatherama.model.weather.Weather;
@@ -60,7 +61,7 @@ public class HourlyConditionsFragment extends BaseFragment implements HomeActivi
 
     @Override
     protected int onCreateViewId() {
-        return 0;
+        return R.layout.fragment_conditions_hourly;
     }
 
     @Override

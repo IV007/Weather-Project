@@ -3,4 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="progress_indicator_edge">100dp</dimen>
+    <dimen name="tab_padding">16dp</dimen>
+
 </resources>
