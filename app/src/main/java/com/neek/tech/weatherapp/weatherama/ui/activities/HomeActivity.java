@@ -1,6 +1,7 @@
 package com.neek.tech.weatherapp.weatherama.ui.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.base.BaseActivity;
@@ -12,6 +13,7 @@ import com.neek.tech.weatherapp.weatherama.utilities.Constants;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 import com.neek.tech.weatherapp.weatherama.utilities.NetworkUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends BaseActivity implements
@@ -30,6 +32,12 @@ public class HomeActivity extends BaseActivity implements
         Logger.create(TAG);
 
         setContentView(R.layout.activity_home);
+
+        if (mHomeActivityListener == null){
+            mHomeActivityListener = new ArrayList<>();
+        }
+        navigateToFragment(HomeFragment.newInstance());
+
     }
 
     @Override
@@ -59,7 +67,6 @@ public class HomeActivity extends BaseActivity implements
                 hideProgressDialog();
 
                 if (weather != null) {
-                    navigateToFragment(HomeFragment.newInstance(weather));
 
                     if (mHomeActivityListener != null) {
                         for (HomeActivityListener listener : mHomeActivityListener) {
@@ -78,17 +85,26 @@ public class HomeActivity extends BaseActivity implements
 
     }
 
+    /**
+     * Method to Register for data updates
+     */
     public void addListener(HomeActivityListener listener){
-        if (mHomeActivityListener != null && mHomeActivityListener.size() > 0 &&
+        if (mHomeActivityListener != null && mHomeActivityListener.size() >= 0 &&
                 !mHomeActivityListener.contains(listener)){
             mHomeActivityListener.add(listener);
+            Log.e(TAG, "Listener added " + listener.toString());
         }
     }
 
+    /**
+     * Method to un-register for data updates
+     */
     public void removeListener(HomeActivityListener listener){
         if (mHomeActivityListener != null && mHomeActivityListener.size() > 0 &&
                 mHomeActivityListener.contains(listener)){
             mHomeActivityListener.remove(listener);
+            Log.e(TAG, "Listener removed " + listener.toString());
+
         }
     }
 

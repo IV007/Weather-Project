@@ -3,6 +3,7 @@ package com.neek.tech.weatherapp.weatherama.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.base.BaseFragment;
@@ -13,15 +14,15 @@ import com.neek.tech.weatherapp.weatherama.ui.activities.HomeActivity;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 
 /**
- * Created by ivanutsalo on 11/7/16.
+ * DailyConditions fragment for displaying weather conditions for
+ * 1-week from current day.
  */
 public class DailyConditionsFragment extends BaseFragment implements HomeActivityListener {
 
     private static final String TAG = DailyConditionsFragment.class.getSimpleName();
 
-    public static DailyConditionsFragment newInstance(DailyWeather weather){
+    public static DailyConditionsFragment newInstance(){
         Bundle b = new Bundle();
-        b.putSerializable(TAG, weather);
         DailyConditionsFragment frag = new DailyConditionsFragment();
         frag.setArguments(b);
         return frag;
@@ -41,16 +42,14 @@ public class DailyConditionsFragment extends BaseFragment implements HomeActivit
         super.onCreate(savedInstanceState);
         Logger.create(TAG);
 
-        if (getArguments() != null && getArguments().containsKey(TAG)) {
-            displayDailyWeather((DailyWeather) getArguments().getSerializable(TAG));
-        }
 
     }
+
 
     @Override
     public void onDetach() {
         super.onDetach();
-
+        Log.e(TAG, "onDetach() called");
         if (getActivity() instanceof HomeActivity){
             ((HomeActivity) getActivity()).removeListener(this);
         }
@@ -75,5 +74,6 @@ public class DailyConditionsFragment extends BaseFragment implements HomeActivit
 
     private void displayDailyWeather(final DailyWeather dailyWeather){
         //TODO - show daily weather.
+        Log.i(TAG, "DailyWeather " + dailyWeather.toString());
     }
 }

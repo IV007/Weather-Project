@@ -3,6 +3,7 @@ package com.neek.tech.weatherapp.weatherama.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.base.BaseFragment;
@@ -19,9 +20,8 @@ public class MinutelyConditionsFragment extends BaseFragment implements HomeActi
 
     private static final String TAG = MinutelyConditionsFragment.class.getSimpleName();
 
-    public static MinutelyConditionsFragment newInstance(MinuteWeather weather) {
+    public static MinutelyConditionsFragment newInstance() {
         Bundle b = new Bundle();
-        b.putSerializable(TAG, weather);
         MinutelyConditionsFragment frag = new MinutelyConditionsFragment();
         frag.setArguments(b);
         return frag;
@@ -41,9 +41,6 @@ public class MinutelyConditionsFragment extends BaseFragment implements HomeActi
         super.onCreate(savedInstanceState);
         Logger.create(TAG);
 
-        if (getArguments() != null && getArguments().containsKey(TAG)) {
-            displayMinutelyWeather((MinuteWeather) getArguments().getSerializable(TAG));
-        }
 
     }
 
@@ -75,5 +72,6 @@ public class MinutelyConditionsFragment extends BaseFragment implements HomeActi
 
     private void displayMinutelyWeather(MinuteWeather minuteWeather) {
         //TODO - Show minutely weather.
+        Log.i(TAG, "Minute weather " + minuteWeather.toString());
     }
 }

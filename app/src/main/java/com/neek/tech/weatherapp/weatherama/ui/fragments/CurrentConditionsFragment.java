@@ -3,6 +3,7 @@ package com.neek.tech.weatherapp.weatherama.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.base.BaseFragment;
@@ -19,9 +20,8 @@ public class CurrentConditionsFragment extends BaseFragment implements HomeActiv
 
     private static final String TAG = CurrentConditionsFragment.class.getSimpleName();
 
-    public static CurrentConditionsFragment newInstance(CurrentWeather weather){
+    public static CurrentConditionsFragment newInstance(){
         Bundle b = new Bundle();
-        b.putSerializable(TAG, weather);
         CurrentConditionsFragment frag = new CurrentConditionsFragment();
         frag.setArguments(b);
         return frag;
@@ -41,9 +41,6 @@ public class CurrentConditionsFragment extends BaseFragment implements HomeActiv
         super.onCreate(savedInstanceState);
         Logger.create(TAG);
 
-        if (getArguments() != null && getArguments().containsKey(TAG)){
-            displayCurrentWeather((CurrentWeather) getArguments().getSerializable(TAG));
-        }
     }
 
 
@@ -75,6 +72,7 @@ public class CurrentConditionsFragment extends BaseFragment implements HomeActiv
 
     private void displayCurrentWeather(CurrentWeather currentWeather){
         //TODO - Show current weather.
+        Log.i(TAG, "Current weather " + currentWeather.toString());
 
     }
 }

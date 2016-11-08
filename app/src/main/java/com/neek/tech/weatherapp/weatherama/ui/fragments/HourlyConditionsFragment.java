@@ -3,6 +3,7 @@ package com.neek.tech.weatherapp.weatherama.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.base.BaseFragment;
@@ -21,9 +22,8 @@ public class HourlyConditionsFragment extends BaseFragment implements HomeActivi
     private static final String TAG = HourlyConditionsFragment.class.getSimpleName();
 
 
-    public static HourlyConditionsFragment newInstance(HourlyWeather weather) {
+    public static HourlyConditionsFragment newInstance() {
         Bundle b = new Bundle();
-        b.putSerializable(TAG, weather);
         HourlyConditionsFragment frag = new HourlyConditionsFragment();
         frag.setArguments(b);
         return frag;
@@ -42,11 +42,6 @@ public class HourlyConditionsFragment extends BaseFragment implements HomeActivi
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Logger.create(TAG);
-
-
-        if (getArguments() != null && getArguments().containsKey(TAG)) {
-            displayHourlyWeather((HourlyWeather) getArguments().getSerializable(TAG));
-        }
 
     }
 
@@ -78,5 +73,6 @@ public class HourlyConditionsFragment extends BaseFragment implements HomeActivi
 
     private void displayHourlyWeather(final HourlyWeather hourlyWeather) {
         //TODO - Show hourly weather
+        Log.i(TAG, "Hourly weather " + hourlyWeather.toString());
     }
 }

@@ -35,9 +35,9 @@ public class HomeFragment extends BaseFragment {
 
     private Weather mWeather;
 
-    public static HomeFragment newInstance(Weather weather) {
+    public static HomeFragment newInstance(/*Weather weather*/) {
         Bundle b = new Bundle();
-        b.putSerializable(TAG, weather);
+//        b.putSerializable(TAG, weather);
         HomeFragment frag = new HomeFragment();
         frag.setArguments(b);
         return frag;
@@ -81,15 +81,17 @@ public class HomeFragment extends BaseFragment {
             }
         });
 
-        ArrayList<BaseFragment> mFragments = new ArrayList<>();
-        mFragments.add(CurrentConditionsFragment.newInstance(mWeather.getCurrentWeather()));
-        mFragments.add(MinutelyConditionsFragment.newInstance(mWeather.getMinuteWeather()));
-        mFragments.add(HourlyConditionsFragment.newInstance(mWeather.getHourlyWeather()));
-        mFragments.add(DailyConditionsFragment.newInstance(mWeather.getDailyWeather()));
+        ArrayList<BaseFragment> mFragments = new ArrayList<>(4);
+        mFragments.add(CurrentConditionsFragment.newInstance());
+        mFragments.add(MinutelyConditionsFragment.newInstance());
+        mFragments.add(HourlyConditionsFragment.newInstance());
+        mFragments.add(DailyConditionsFragment.newInstance());
 
         HomeScreenPagerAdapter adapter = new HomeScreenPagerAdapter(getChildFragmentManager(), mFragments);
         mViewPager.setAdapter(adapter);
         mViewPager.setCurrentItem(0);
+        mViewPager.setOffscreenPageLimit(3);
+
         mSlidingTabLayout.setViewPager(mViewPager);
     }
 
