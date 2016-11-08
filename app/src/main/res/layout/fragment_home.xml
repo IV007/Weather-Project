@@ -9,7 +9,7 @@
         android:id="@+id/pagerHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/cfa_official_red"
+        android:background="@color/colorPrimaryDark"
         android:textColor="@color/white"
         android:textSize="18sp"
         />
