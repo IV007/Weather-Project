@@ -61,7 +61,7 @@ public abstract class BaseActivity extends FragmentActivity implements BaseView 
 
     @Override
     public void onError(String title, String errorMessage) {
-        WeatherErrorDialog dialog = WeatherErrorDialog.newInstance("Error", errorMessage);
+        WeatherErrorDialog dialog = WeatherErrorDialog.newInstance(title, errorMessage);
         dialog.show(getFragmentManager(), ERROR_DIALOG_TAG);
     }
 

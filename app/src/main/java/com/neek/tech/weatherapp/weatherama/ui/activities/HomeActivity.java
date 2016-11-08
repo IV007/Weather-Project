@@ -5,15 +5,23 @@ import android.os.Bundle;
 import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.base.BaseActivity;
 import com.neek.tech.weatherapp.weatherama.controllers.WeatherController;
-import com.neek.tech.weatherapp.weatherama.model.weather.CurrentWeather;
+import com.neek.tech.weatherapp.weatherama.model.weather.Weather;
+import com.neek.tech.weatherapp.weatherama.ui.HomeActivityListener;
 import com.neek.tech.weatherapp.weatherama.utilities.Constants;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 import com.neek.tech.weatherapp.weatherama.utilities.NetworkUtils;
+
+import java.util.List;
 
 public class HomeActivity extends BaseActivity implements
         WeatherController.HomeActivityView {
 
     private static final String TAG = "HomeActivity";
+
+    /**
+     * Listener to notify fragments when new data is retrieved
+     */
+    private List<HomeActivityListener> mHomeActivityListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,34 +51,48 @@ public class HomeActivity extends BaseActivity implements
     }
 
     @Override
-    public void onCurrentWeatherRetrieved(final CurrentWeather currentWeather) {
-        Logger.d(TAG, "CurrentWeather " + currentWeather.toString());
+    public void onWeatherRetrieved(final Weather weather) {
+        Logger.d(TAG, "CurrentWeather " + weather.toString());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 hideProgressDialog();
-                displayCurrentConditions(currentWeather);
+
+                if (weather != null) {
+
+                    if (mHomeActivityListener != null) {
+                        for (HomeActivityListener listener : mHomeActivityListener) {
+                            listener.onWeatherRetrieved(weather);
+                        }
+                    }
+
+                } else {
+
+                    showErrorDialog(getString(R.string.okhttp_error_title), getString(R.string.okhttp_error_message));
+
+                }
 
             }
         });
 
     }
 
-    private void displayCurrentConditions(final CurrentWeather currentWeather){
-
-        if (currentWeather != null){
-            //TODO - update UI here.
-
-
-        } else {
-
-            showErrorDialog(getString(R.string.okhttp_error_title), getString(R.string.okhttp_error_message));
+    public void addListener(HomeActivityListener listener){
+        if (mHomeActivityListener != null && mHomeActivityListener.size() > 0 &&
+                !mHomeActivityListener.contains(listener)){
+            mHomeActivityListener.add(listener);
         }
     }
 
+    public void removeListener(HomeActivityListener listener){
+        if (mHomeActivityListener != null && mHomeActivityListener.size() > 0 &&
+                mHomeActivityListener.contains(listener)){
+            mHomeActivityListener.remove(listener);
+        }
+    }
 
     @Override
     protected int getIdRootFragmentContainer() {
-        return 0;
+        return R.id.container;
     }
 }

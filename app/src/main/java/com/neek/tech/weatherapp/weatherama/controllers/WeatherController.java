@@ -1,7 +1,6 @@
 package com.neek.tech.weatherapp.weatherama.controllers;
 
 import com.neek.tech.weatherapp.weatherama.base.BaseView;
-import com.neek.tech.weatherapp.weatherama.model.weather.CurrentWeather;
 import com.neek.tech.weatherapp.weatherama.model.weather.Weather;
 import com.neek.tech.weatherapp.weatherama.service.WeatherService;
 import com.neek.tech.weatherapp.weatherama.service.WeatherUpdater;
@@ -33,6 +32,8 @@ public class WeatherController implements WeatherUpdater {
         return singleton;
     }
 
+
+
     public void fetchWeatherData(final String url){
         final WeatherService service = WeatherService.getInstance();
         service.setWeatherUpdater(this);
@@ -43,7 +44,7 @@ public class WeatherController implements WeatherUpdater {
     @Override
     public void onWeatherDataRetrieved(Weather weather) {
         if (mHomeActivityView != null && weather != null){
-            mHomeActivityView.onCurrentWeatherRetrieved(weather.getCurrentWeather());
+            mHomeActivityView.onWeatherRetrieved(weather);
         }
     }
 
@@ -58,8 +59,8 @@ public class WeatherController implements WeatherUpdater {
         mHomeActivityView = view;
     }
 
-    public interface HomeActivityView extends BaseView{
+    public interface HomeActivityView extends BaseView {
 
-        void onCurrentWeatherRetrieved(final CurrentWeather currentWeather);
+        void onWeatherRetrieved(final Weather weather);
     }
 }

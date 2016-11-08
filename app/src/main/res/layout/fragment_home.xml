@@ -5,11 +5,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.bottlerocketapps.ui.slidingTab.SlidingTabLayout
+    <com.neek.tech.weatherapp.ui.SlidingTabLayout
         android:id="@+id/pagerHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorPrimary"
         android:textColor="@color/white"
         android:textSize="18sp"
         />
