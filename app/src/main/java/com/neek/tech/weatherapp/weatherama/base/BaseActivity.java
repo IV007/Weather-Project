@@ -1,10 +1,14 @@
 package com.neek.tech.weatherapp.weatherama.base;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -187,5 +191,38 @@ public abstract class BaseActivity extends FragmentActivity implements BaseView 
      * Returns an int of the container to attach fragments
      */
     protected abstract int getIdRootFragmentContainer();
+
+
+    /**
+     * Function to show settings alert dialog.
+     * On pressing the Settings button it will launch Settings Options.
+     * */
+    public void showGpsDisabledDialog(){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+        // Setting Dialog Title
+        alertDialog.setTitle("GPS disabled");
+
+        // Setting Dialog Message
+        alertDialog.setMessage("GPS is not enabled. Do you want to enable GPS from settings menu?");
+
+        // On pressing the Settings button.
+        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        });
+
+        // On pressing the cancel button
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
 
 }

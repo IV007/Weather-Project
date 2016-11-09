@@ -1,5 +1,6 @@
 package com.neek.tech.weatherapp.weatherama.ui.activities;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -10,14 +11,16 @@ import com.neek.tech.weatherapp.weatherama.model.weather.Weather;
 import com.neek.tech.weatherapp.weatherama.ui.HomeActivityListener;
 import com.neek.tech.weatherapp.weatherama.ui.fragments.HomeFragment;
 import com.neek.tech.weatherapp.weatherama.utilities.Constants;
+import com.neek.tech.weatherapp.weatherama.utilities.LocationUtils;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 import com.neek.tech.weatherapp.weatherama.utilities.NetworkUtils;
+import com.neek.tech.weatherapp.weatherama.WeatherLocationManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends BaseActivity implements
-        WeatherController.HomeActivityView {
+        WeatherController.HomeActivityView, WeatherLocationManager.LocationUpdater {
 
     private static final String TAG = "HomeActivity";
 
@@ -25,6 +28,8 @@ public class HomeActivity extends BaseActivity implements
      * Listener to notify fragments when new data is retrieved
      */
     private List<HomeActivityListener> mHomeActivityListener;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,21 +43,49 @@ public class HomeActivity extends BaseActivity implements
         }
         navigateToFragment(HomeFragment.newInstance());
 
+        WeatherLocationManager.getInstance(this);
+        WeatherLocationManager.setLocationUpdater(this);
+
+        if (LocationUtils.isLocationServicesEnabled(this) && WeatherLocationManager.isLocationServicesConnected()) {
+            WeatherLocationManager.connect(this);
+            WeatherLocationManager.getLastLocation(this);
+        } else {
+            showGpsDisabledDialog();
+        }
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        fetchWeatherData();
+        if (LocationUtils.isLocationServicesEnabled(this) &&
+                WeatherLocationManager.isLocationServicesConnected()) {
+            WeatherLocationManager.updateLocation(this);
+        } else {
+            showGpsDisabledDialog();
+        }
+
     }
 
-    private void fetchWeatherData() {
+    @Override
+    protected void onPause() {
+        super.onPause();
+        WeatherLocationManager.disconnect();
+        WeatherLocationManager.removeUpdates();
+
+    }
+
+    private void fetchWeatherData(final Location location) {
         if (NetworkUtils.isNetworkAvailable(this)) {
-//            String url = Constants.FORECAST_URL;
-            showProgressDialog();
-            WeatherController.setHomeActivityView(this);
-            WeatherController.getInstance().fetchWeatherData(Constants.TEMP_FORECAST_URL);
+            if (location != null) {
+                String url = Constants.FORECAST_URL
+                        .replace("[latitude]", Double.toString(location.getLatitude()))
+                        .replace("[longitude]", Double.toString(location.getLongitude()));
+                showProgressDialog();
+                WeatherController.setHomeActivityView(this);
+                WeatherController.getInstance().fetchWeatherData(url);
+            }
         } else {
             showErrorDialog(getString(R.string.network_unavailable_title), getString(R.string.network_unavailable_message));
         }
@@ -111,5 +144,10 @@ public class HomeActivity extends BaseActivity implements
     @Override
     protected int getIdRootFragmentContainer() {
         return R.id.container;
+    }
+
+    @Override
+    public void onLocationRetrieved(final Location location) {
+        fetchWeatherData(location);
     }
 }
