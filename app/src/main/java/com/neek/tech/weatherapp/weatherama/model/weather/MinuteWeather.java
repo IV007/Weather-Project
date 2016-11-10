@@ -78,20 +78,20 @@ public class MinuteWeather implements Serializable {
     private class MinuteData implements Serializable  {
 
         @SerializedName("time")
-        private Integer time;
+        private long time;
 
         @SerializedName("precipIntensity")
-        private Integer precipIntensity;
+        private double precipIntensity;
 
         @SerializedName("precipProbability")
-        private Integer precipProbability;
+        private double precipProbability;
 
         /**
          *
          * @return
          * The time
          */
-        public Integer getTime() {
+        public long getTime() {
             return time;
         }
 
@@ -100,7 +100,7 @@ public class MinuteWeather implements Serializable {
          * @param time
          * The time
          */
-        public void setTime(Integer time) {
+        public void setTime(long time) {
             this.time = time;
         }
 
@@ -109,7 +109,7 @@ public class MinuteWeather implements Serializable {
          * @return
          * The precipIntensity
          */
-        public Integer getPrecipIntensity() {
+        public double getPrecipIntensity() {
             return precipIntensity;
         }
 
@@ -118,7 +118,7 @@ public class MinuteWeather implements Serializable {
          * @param precipIntensity
          * The precipIntensity
          */
-        public void setPrecipIntensity(Integer precipIntensity) {
+        public void setPrecipIntensity(double precipIntensity) {
             this.precipIntensity = precipIntensity;
         }
 
@@ -127,7 +127,7 @@ public class MinuteWeather implements Serializable {
          * @return
          * The precipProbability
          */
-        public Integer getPrecipProbability() {
+        public double getPrecipProbability() {
             return precipProbability;
         }
 
@@ -136,7 +136,7 @@ public class MinuteWeather implements Serializable {
          * @param precipProbability
          * The precipProbability
          */
-        public void setPrecipProbability(Integer precipProbability) {
+        public void setPrecipProbability(double precipProbability) {
             this.precipProbability = precipProbability;
         }
 
