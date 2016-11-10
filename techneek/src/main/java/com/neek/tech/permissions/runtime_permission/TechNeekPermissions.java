@@ -16,7 +16,7 @@ public class TechNeekPermissions {
 
     public static void initialize(Context context) {
         if (instance == null) {
-            Log.i("TechNeekPermissions", "initializing CFA TechNeekPermissions");
+            Log.i("TechNeekPermissions", "initializing TechNeekPermissionSuite");
             PermissionsWrapper androidPermissionService = new PermissionsWrapper();
             instance = new PermissionsInstance(context, androidPermissionService);
         }

@@ -1,21 +1,21 @@
-package com.neek.tech.permissions.ui;
+package com.neek.tech.weatherapp.weatherama.ui.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.neek.tech.permissions.runtime_permission.PermissionConstants;
-import com.neek.tech.techneekpermissionsuite.R;
+import com.neek.tech.weatherapp.R;
+import com.neek.tech.weatherapp.weatherama.base.BaseActivity;
+import com.neek.tech.weatherapp.weatherama.ui.fragments.RuntimeLocationPermissionFragment;
 
 /**
  * Generic container activity for
  * hosting runtime permission rationale fragments.
  */
-public class RuntimePermissionActivity extends FragmentActivity {
+public class RuntimePermissionActivity extends BaseActivity {
 
-    public static final String TAG = "ermissionActivity";
+    public static final String TAG = "WPermissionActivity";
 
     /**
      * Permission type used by activity to dynamically
@@ -23,15 +23,14 @@ public class RuntimePermissionActivity extends FragmentActivity {
      * (default == Location).
      */
     private PermissionType mPermissionType = PermissionType.LOCATION;
-    ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         overridePendingTransition(R.anim.slide_up_from_bottom_with_accelerate_decelerate, android.R.anim.fade_out);
         super.onCreate(savedInstanceState);
-        setContentView(0);
-        Log.d(TAG, "created");
-
+        setContentView(R.layout.activity_runtime_permissions);
+        Log.e(TAG, "Created");
 
         if (getIntent() != null){
             final String permissionTypeStr = getIntent().getStringExtra(TAG);
@@ -41,12 +40,17 @@ public class RuntimePermissionActivity extends FragmentActivity {
         setCurrentRuntimePermissionFragment();
     }
 
+    @Override
+    protected int getIdRootFragmentContainer() {
+        return R.id.container;
+    }
+
 
     private void setCurrentRuntimePermissionFragment() {
         switch (mPermissionType){
             case LOCATION:
                 RuntimeLocationPermissionFragment fragment = RuntimeLocationPermissionFragment.newInstance();
-                navigateToFragment(fragment, RuntimeLocationPermissionFragment.TAG);
+                navigateToFragment(fragment);
                 break;
 
             case STORAGE:
@@ -60,12 +64,6 @@ public class RuntimePermissionActivity extends FragmentActivity {
 
     }
 
-    public void navigateToFragment(Fragment fragment, String tag) {
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction trans = fragmentManager.beginTransaction();
-//        trans.add(R.id.runtimeContainer, fragment, tag);
-//        trans.commit();
-    }
 
     @Override
     public void onBackPressed() {

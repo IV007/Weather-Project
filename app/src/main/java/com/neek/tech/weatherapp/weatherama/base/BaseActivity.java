@@ -9,13 +9,16 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.neek.tech.weatherapp.weatherama.ui.activities.RuntimePermissionActivity;
 import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 import com.neek.tech.weatherapp.weatherama.utilities.WeatherErrorDialog;
+import com.neek.tech.weatherapp.weatherama.utilities.WeatheramaPreferences;
 
 /**
  * Super class for all Activity's
@@ -27,6 +30,7 @@ public abstract class BaseActivity extends FragmentActivity implements BaseView 
     private static final String ERROR_DIALOG_TAG = "ERROR_DIALOG";
 
     private View progressIndicator;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,4 +229,15 @@ public abstract class BaseActivity extends FragmentActivity implements BaseView 
         alertDialog.show();
     }
 
+    public void showRuntimePermissionFragment(String permissionType){
+        if (getApplicationContext() == null)
+            return;
+
+        if (!WeatheramaPreferences.isUserLocationRationaleShown(this)) {
+            Log.i(TAG, "Launching Runtime permission activity for type " + permissionType);
+            Intent intent = new Intent(this, RuntimePermissionActivity.class);
+            intent.putExtra(RuntimePermissionActivity.TAG, permissionType);
+            startActivity(intent);
+        }
+    }
 }

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingEnd="10dp"
+    android:paddingStart="10dp"
+    android:background="@color/black"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/messageLayout"
+
+        >
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_warning"
+            android:id="@+id/imageView"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/location_permission_required_title"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="@string/location_permission_required_message"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            />
+
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/acceptMessageTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="@string/location_permission_granted_message"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:visibility="gone"
+        android:layout_below="@+id/messageLayout"
+        />
+
+
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@id/acceptMessageTextView"
+        android:layout_marginBottom="10dp"
+        >
+
+        <Button
+            android:id="@+id/acceptButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/button_dark_green"
+            android:text="@string/button_allow"
+            android:textColor="@color/button_light_green"
+            />
+
+        <Button
+            android:id="@+id/declineButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/button_dark_red"
+            android:text="@string/button_refuse"
+            android:textColor="@color/button_light_red"
+            />
+    </LinearLayout>
+</RelativeLayout>
