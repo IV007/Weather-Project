@@ -33,7 +33,7 @@ public class WeatherLocationManager implements
     private static LocationManager mLocationManager;
     private static String provider;
     private static LocationUpdater mLocationUpdater;
-    private Context mContext;
+    private static Context mContext;
     private static long locationTimer;
 
     private static boolean mConnected;
@@ -53,6 +53,7 @@ public class WeatherLocationManager implements
     public static WeatherLocationManager getInstance(Context context) {
         if (singleton == null) {
             initialize(context);
+            mContext = context;
         }
         return singleton;
     }
@@ -62,6 +63,8 @@ public class WeatherLocationManager implements
         if (mLocationClient != null && !mConnected) {
             Log.i(TAG, "connect");
             mLocationClient.connect();
+            mContext = context;
+
         }
     }
 
@@ -78,12 +81,12 @@ public class WeatherLocationManager implements
     }
 
     public static boolean isPollingTimeExpired(){
-
+        return false;
     }
 
     public static void getLastLocation(Context context) {
         if (mConnected && mLocationClient != null &&
-                PermissionUtils.hasPermission(PermissionConstants.LOCATION_PERMISSION)) {
+                PermissionUtils.hasPermission(context, PermissionConstants.LOCATION_PERMISSION)) {
             Location location = null;
             if (PermissionChecker.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     && PermissionChecker.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -102,7 +105,7 @@ public class WeatherLocationManager implements
     public static void updateLocation(Context context) {
         // Create the LocationRequest object
         if (mConnected && mLocationClient != null &&
-                PermissionUtils.hasPermission(PermissionConstants.LOCATION_PERMISSION)) {
+                PermissionUtils.hasPermission(context, PermissionConstants.LOCATION_PERMISSION)) {
             if (PermissionChecker.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     && PermissionChecker.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
@@ -123,18 +126,20 @@ public class WeatherLocationManager implements
     public void onConnected(Bundle arg0) {
         mConnected = true;
         Location currentLocation;
-        if (PermissionUtils.hasPermission(PermissionConstants.LOCATION_PERMISSION)) {
+        if (PermissionUtils.hasPermission(mContext, PermissionConstants.LOCATION_PERMISSION)) {
             currentLocation = LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
 
             if (mLocationUpdater != null) {
                 mLocationUpdater.onLocationRetrieved(currentLocation);
             }
-            if (!PermissionUtils.isAndroidOSMarshmallowOrAbove()) {
-                currentLocation = LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
 
-                if (mLocationUpdater != null) {
-                    mLocationUpdater.onLocationRetrieved(currentLocation);
-                }
+        }
+
+        if (!PermissionUtils.isAndroidOSMarshmallowOrAbove()) {
+            currentLocation = LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
+
+            if (mLocationUpdater != null) {
+                mLocationUpdater.onLocationRetrieved(currentLocation);
             }
         }
     }
