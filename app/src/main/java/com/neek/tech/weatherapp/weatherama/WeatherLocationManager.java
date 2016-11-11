@@ -70,6 +70,7 @@ public class WeatherLocationManager implements
 
     public static void disconnect() {
         if (mLocationClient != null) {
+            Log.i(TAG, "disconnect");
             mLocationClient.disconnect();
             mConnected = false;
         }
