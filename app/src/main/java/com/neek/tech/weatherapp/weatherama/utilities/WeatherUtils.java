@@ -26,7 +26,7 @@ public class WeatherUtils {
     /**
      * Static method to return int matching drawable id, based on @param supplied.
      */
-    public static int getIconId(final String mIcon){
+    public static Drawable getIconId(Context context, final String mIcon){
 
         //clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day, or partly-cloudy-night
         int iconId = R.drawable.clear_day;
@@ -64,7 +64,7 @@ public class WeatherUtils {
                 break;
         }
 
-        return iconId;
+        return ContextCompat.getDrawable(context, iconId);
     }
 
 
@@ -118,13 +118,46 @@ public class WeatherUtils {
         return null;
     }
 
+    public static int setLayoutBackgroundResource(final String icon) {
+
+        Log.e(TAG, "iconName: " + icon);
+        if (!TextUtils.isEmpty(icon)) {
+            int gradientDrawable = 0;
+            switch (icon) {
+                case "clear-day":
+                    gradientDrawable = R.drawable.bg_gradient_clear_day;
+                    break;
+
+                case "clear-night":
+                    gradientDrawable = R.drawable.bg_gradient_clear_night;
+                    break;
+
+                case "partly-cloudy-night":
+                    gradientDrawable = R.drawable.bg_gradient_cloudy_night;
+                    break;
+
+                case "partly-cloudy-day":
+                    gradientDrawable = R.drawable.bg_gradient_partly_cloudy_day;
+                    break;
+
+                case "rain":
+                    gradientDrawable = R.drawable.bg_gradient_light_rain;
+                    break;
+            }
+
+
+            return gradientDrawable;
+        }
+        return 0;
+    }
+
     /**
      * Static method to return integer values @param supplied
      * @param temp temperature to be rounded up
      * @return int value.
      */
-    public static int getTemperature(final double temp){
-        return (int) Math.round(temp);
+    public static String getTemperature(final double temp){
+        return String.format("%s", (int) Math.round(temp));
     }
 
     /**

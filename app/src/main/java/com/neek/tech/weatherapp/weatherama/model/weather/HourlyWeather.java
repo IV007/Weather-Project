@@ -21,7 +21,7 @@ public class HourlyWeather implements Serializable {
     private String icon;
     @SerializedName("data")
     @Expose
-    private List<HourlyData> data = new ArrayList<>();
+    private ArrayList<HourlyData> data = new ArrayList<>();
 
     /**
      *
@@ -64,7 +64,7 @@ public class HourlyWeather implements Serializable {
      * @return
      * The data
      */
-    public List<HourlyData> getData() {
+    public ArrayList<HourlyData> getData() {
         return data;
     }
 
@@ -73,12 +73,12 @@ public class HourlyWeather implements Serializable {
      * @param data
      * The data
      */
-    public void setData(List<HourlyData> data) {
+    public void setData(ArrayList<HourlyData> data) {
         this.data = data;
     }
 
 
-    private class HourlyData implements Serializable {
+    public class HourlyData implements Serializable {
 
         @SerializedName("time")
         private Integer time;
