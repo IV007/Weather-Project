@@ -1,6 +1,8 @@
 package com.neek.tech.weatherapp.weatherama;
 
 import android.app.Application;
+
+import com.neek.tech.permissions.runtime_permission.PermissionUtils;
 import com.neek.tech.weatherapp.weatherama.controllers.WeatherController;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 
@@ -17,6 +19,8 @@ public class WeatherApplication  extends Application {
         Logger.create(TAG);
 
         WeatherController.initialize();
+        WeatherLocationManager.initialize(this);
+        PermissionUtils.initialize(this);
     }
 
 }

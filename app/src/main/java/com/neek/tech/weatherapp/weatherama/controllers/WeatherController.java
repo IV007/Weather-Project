@@ -1,5 +1,7 @@
 package com.neek.tech.weatherapp.weatherama.controllers;
 
+import android.util.Log;
+
 import com.neek.tech.weatherapp.weatherama.base.BaseView;
 import com.neek.tech.weatherapp.weatherama.model.weather.Weather;
 import com.neek.tech.weatherapp.weatherama.service.WeatherService;
@@ -32,12 +34,11 @@ public class WeatherController implements WeatherUpdater {
         return singleton;
     }
 
-
-
     public void fetchWeatherData(final String url){
-        final WeatherService service = WeatherService.getInstance();
-        service.setWeatherUpdater(this);
-        service.getWeatherData(url);
+        Log.e(TAG, "url - " + url);
+        WeatherService.getInstance();
+        WeatherService.setWeatherUpdater(this);
+        WeatherService.getWeatherData(url);
 
     }
 

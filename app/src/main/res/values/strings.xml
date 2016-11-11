@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">One</string>
+    <string name="app_name">Weatherama</string>
     <string name="network_unavailable_title">Network unavailable!</string>
     <string name="network_unavailable_message">Please check your network settings.</string>
     <string name="okhttp_error_title">Something\'s up</string>

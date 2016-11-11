@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TechNeekPermissionSuite</string>
+    <string name="location_permission_required_title">Location Service is disabled</string>
+    <string name="location_permission_required_message">Weatherama needs location permission to provide the most accurate weather conditions for your area</string>
+    <string name="location_permission_granted_message">Awesome! \nPlease tap Allow when the dialog appears.</string>
+    <string name="button_allow">Allow</string>
+    <string name="button_refuse">Refuse</string>
+</resources>

@@ -28,7 +28,7 @@ public class WeatherService {
     /**
      * Weather BaseUpdater interface object
      */
-    private WeatherUpdater mWeatherUpdater;
+    private static WeatherUpdater mWeatherUpdater;
 
     private WeatherService(){}
 
@@ -36,17 +36,21 @@ public class WeatherService {
         if (singleton == null){
             singleton = new OkHttpClient();
         }
+
+        if (mWeatherService == null){
+            mWeatherService = new WeatherService();
+        }
     }
 
     public static WeatherService getInstance(){
         if (mWeatherService == null){
-            mWeatherService = new WeatherService();
+           initialize();
         }
 
         return mWeatherService;
     }
 
-    public void getWeatherData(String url){
+    public static void getWeatherData(String url){
         Request request = new Request.Builder().url(url).build();
         if (singleton != null) {
             singleton.newCall(request).enqueue(new Callback() {
@@ -73,7 +77,7 @@ public class WeatherService {
         }
     }
 
-    public void setWeatherUpdater(WeatherUpdater weatherUpdater){
-        this.mWeatherUpdater = weatherUpdater;
+    public static void setWeatherUpdater(WeatherUpdater weatherUpdater){
+        mWeatherUpdater = weatherUpdater;
     }
 }

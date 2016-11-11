@@ -14,9 +14,8 @@ import javax.annotation.CheckForNull;
 import butterknife.ButterKnife;
 
 /**
- * Created by ivanutsalo on 11/7/16.
+ * Base Implementation for fragments.
  */
-
 public abstract class BaseFragment extends Fragment implements BaseView {
 
     private final static int NO_ID = -1;
