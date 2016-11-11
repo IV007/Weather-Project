@@ -60,6 +60,7 @@ public class HomeActivity extends BaseActivity implements
         super.onResume();
 
         if (!PermissionUtils.hasPermission(this, PermissionConstants.LOCATION_PERMISSION)) {
+
             showRuntimePermissionFragment(PermissionConstants.LOCATION);
 
         } else {
