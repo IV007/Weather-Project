@@ -4,5 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="progress_indicator_edge">100dp</dimen>
     <dimen name="tab_padding">16dp</dimen>
+    <dimen name="previous_location_text_size">18sp</dimen>
+    <dimen name="rounded_corner_radius">10dp</dimen>
 
 </resources>

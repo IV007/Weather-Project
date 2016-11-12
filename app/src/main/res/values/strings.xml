@@ -1,12 +1,23 @@
 <resources>
     <string name="app_name">Weatherama</string>
+
+    <!--Menu -->
+    <string name="settings_menu">Settings</string>
+
+    <string name="geocoding_address_found">Address found for location</string>
+    <string name="geocoding_no_address_found">No address found for location</string>
+    <string name="geocoding_service_not_available">Geocoder not available</string>
+    <string name="geocoding_invalid_lat_lng_used">Invalid Location Param supplied to geocoder</string>
     <string name="network_unavailable_title">Network unavailable!</string>
     <string name="network_unavailable_message">Please check your network settings.</string>
     <string name="okhttp_error_title">Something\'s up</string>
     <string name="okhttp_error_message">For some reason we couldn\'t retrieve weather info, \nplease refresh or try again later</string>
 
+    <string name="enable_location_permission">Enable Location Services</string>
+
     <string name="current_conditions">Now</string>
     <string name="minutely_conditions">Minutely</string>
     <string name="hourly_conditions">Hourly</string>
     <string name="daily_conditions">7-Days</string>
+    <string name="previous_locations">Previous Locations</string>
 </resources>
