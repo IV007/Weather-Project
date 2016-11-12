@@ -30,6 +30,19 @@
 
         <activity
             android:name=".weatherama.ui.activities.RuntimePermissionActivity"
+            android:screenOrientation="nosensor"
+
+            />
+
+        <activity
+            android:name=".weatherama.ui.activities.SettingsActivity"
+            android:screenOrientation="nosensor"
+
+            />
+
+        <service
+            android:name=".weatherama.service.FetchAddressIntentService"
+            android:exported="false"
             />
     </application>
 
