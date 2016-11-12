@@ -2,6 +2,7 @@ package com.neek.tech.weatherapp.weatherama;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -18,34 +19,51 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.neek.tech.permissions.runtime_permission.PermissionConstants;
 import com.neek.tech.permissions.runtime_permission.PermissionUtils;
+import com.neek.tech.weatherapp.weatherama.controllers.WeatherController;
+import com.neek.tech.weatherapp.weatherama.service.AddressResultReceiver;
+import com.neek.tech.weatherapp.weatherama.service.FetchAddressIntentService;
+import com.neek.tech.weatherapp.weatherama.utilities.Constants;
 import com.neek.tech.weatherapp.weatherama.utilities.LocationUtils;
+import com.neek.tech.weatherapp.weatherama.utilities.Logger;
+import com.neek.tech.weatherapp.weatherama.utilities.WeatheramaPreferences;
 
 
 /**
  * Location Manager class for retrieving user location.
+ * Geolocation v0.1
  */
 public class WeatherLocationManager implements
         LocationListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,
+        AddressResultReceiver.AddressResultReceiverListener {
 
     private static final String TAG = WeatherLocationManager.class.getSimpleName();
+
     private static WeatherLocationManager singleton;
+
     private static LocationManager mLocationManager;
+
     private static String provider;
+
     private static LocationUpdater mLocationUpdater;
-    private static Context mContext;
-    private static long locationTimer;
+
+    private Context mContext;
 
     private static boolean mConnected;
     private static GoogleApiClient mLocationClient;
+    private static AddressResultReceiver mResultReceiver;
+
 
     private WeatherLocationManager() {
+        Logger.d(TAG, "Initialized");
     }
 
     static void initialize(Context context) {
         mConnected = false;
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         singleton = new WeatherLocationManager();
+        AddressResultReceiver.initialize();
+        AddressResultReceiver.setListener(singleton);
         buildGoogleApiClient(context);
 
     }
@@ -53,7 +71,7 @@ public class WeatherLocationManager implements
     public static WeatherLocationManager getInstance(Context context) {
         if (singleton == null) {
             initialize(context);
-            mContext = context;
+            singleton.mContext = context;
         }
         return singleton;
     }
@@ -63,7 +81,7 @@ public class WeatherLocationManager implements
         if (mLocationClient != null && !mConnected) {
             Log.i(TAG, "connect");
             mLocationClient.connect();
-            mContext = context;
+            singleton.mContext = context;
 
         }
     }
@@ -76,14 +94,16 @@ public class WeatherLocationManager implements
         }
     }
 
+    public static void removeUpdates(Context context) {
+        if (PermissionUtils.hasPermission(context, PermissionConstants.LOCATION_PERMISSION)) {
+            mLocationManager.removeUpdates(singleton);
+        }
+    }
 
     public static boolean isLocationServicesConnected() {
         return mConnected;
     }
 
-    public static boolean isPollingTimeExpired(){
-        return false;
-    }
 
     public static void getLastLocation(Context context) {
         if (mConnected && mLocationClient != null &&
@@ -100,6 +120,10 @@ public class WeatherLocationManager implements
                 mLocationUpdater.onLocationRetrieved(location);
             }
 
+            if (!WeatherController.addressExistsAlready(singleton.mContext, location) &&
+                    WeatheramaPreferences.isSaveUserLocationEnabledByDefault(singleton.mContext)) {
+                startIntentService(location);
+            }
         }
     }
 
@@ -117,6 +141,13 @@ public class WeatherLocationManager implements
         }
     }
 
+    private static void startIntentService(Location location) {
+        Intent intent = new Intent(singleton.mContext, FetchAddressIntentService.class);
+        intent.putExtra(Constants.RECEIVER, AddressResultReceiver.getInstance());
+        intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
+        singleton.mContext.startService(intent);
+    }
+
     @Override
     public void onConnectionFailed(ConnectionResult failure) {
         mConnected = false;
@@ -126,22 +157,26 @@ public class WeatherLocationManager implements
     @Override
     public void onConnected(Bundle arg0) {
         mConnected = true;
-        Location currentLocation;
-        if (PermissionUtils.hasPermission(mContext, PermissionConstants.LOCATION_PERMISSION)) {
+        Location currentLocation = null;
+        if (PermissionUtils.isAndroidOSMarshmallowOrAbove()) {
+            if (PermissionUtils.hasPermission(mContext, PermissionConstants.LOCATION_PERMISSION)) {
+                currentLocation = LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
+
+                if (mLocationUpdater != null) {
+                    mLocationUpdater.onLocationRetrieved(currentLocation);
+                }
+            }
+        } else {
             currentLocation = LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
 
             if (mLocationUpdater != null) {
                 mLocationUpdater.onLocationRetrieved(currentLocation);
             }
-
         }
 
-        if (!PermissionUtils.isAndroidOSMarshmallowOrAbove()) {
-            currentLocation = LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
-
-            if (mLocationUpdater != null) {
-                mLocationUpdater.onLocationRetrieved(currentLocation);
-            }
+        if (!WeatherController.addressExistsAlready(singleton.mContext, currentLocation) &&
+                WeatheramaPreferences.isSaveUserLocationEnabledByDefault(singleton.mContext)) {
+            startIntentService(currentLocation);
         }
     }
 
@@ -152,17 +187,6 @@ public class WeatherLocationManager implements
 
         }
     }
-
-    //What is the replacement for this.
-//	@Override
-//	public void onDisconnected() {
-//		mConnected = false;
-//		if (!mSubscribers.isEmpty()) {
-//        	for (ILocationServicesSubscriber subscriber: mSubscribers) {
-//        		subscriber.disconnected();
-//        	}
-//        }
-//	}
 
     protected static synchronized void buildGoogleApiClient(Context context) {
         if (context == null)
@@ -195,10 +219,6 @@ public class WeatherLocationManager implements
         }
     }
 
-    public static void removeUpdates() {
-        mLocationManager.removeUpdates(singleton);
-    }
-
     @Override
     public void onLocationChanged(Location location) {
 
@@ -207,6 +227,19 @@ public class WeatherLocationManager implements
         }
 
     }
+
+    @Override
+    public void onAddressRetrievalSuccess(final String address, final Location location) {
+
+        WeatherController.saveAddressToPrefs(singleton.mContext, address, location);
+
+    }
+
+    @Override
+    public void onAddressRetrievalError(final String errorMessage) {
+        Logger.e(TAG, errorMessage);
+    }
+
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
@@ -230,5 +263,9 @@ public class WeatherLocationManager implements
     public interface LocationUpdater {
 
         void onLocationRetrieved(final Location location);
+    }
+
+    public static boolean isPollingTimeExpired() {
+        return false;//TODO - implement Polling for location updates. Geolocation v3.0.
     }
 }
