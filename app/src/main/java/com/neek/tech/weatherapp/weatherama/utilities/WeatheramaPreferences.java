@@ -11,9 +11,13 @@ import android.preference.PreferenceManager;
 public class WeatheramaPreferences {
 
 
-    public static final String LOCATION_PERMISSION_PERMANENTLY_DENIED = "LocationPermissionDenied";
-    public static final String LOCATION_PERMISSION_ACCEPTED = "LocationPermissionAccepted";
-    public static final String SHOULD_SHOW_LOCATION_PERMISSION_RATIONALE = "LocationPermissionDenied";
+    private static final String LOCATION_PERMISSION_PERMANENTLY_DENIED = "LocationPermissionDenied";
+    private static final String LOCATION_PERMISSION_ACCEPTED = "LocationPermissionAccepted";
+    private static final String SHOULD_SHOW_LOCATION_PERMISSION_RATIONALE = "LocationPermissionDenied";
+    private static final String SAVE_USER_LOCATIONS_DEFAULT = "SaveUserLocations";
+    private static final String SAVE_USER_LOCATIONS = "SaveUserLocations";
+    private static final String GEOCODE_ADDRESSES = "GEOCODE_ADDRESSES";
+
 
     public static SharedPreferences getSharedPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
@@ -47,4 +51,27 @@ public class WeatheramaPreferences {
         return getSharedPreferences(context).getBoolean(LOCATION_PERMISSION_ACCEPTED, false);
     }
 
+     public static boolean setSaveUserLocationDefault(Context context) {
+        return editSharedPreferences(context).putBoolean(SAVE_USER_LOCATIONS_DEFAULT, true).commit();
+    }
+
+    public static boolean isSaveUserLocationEnabledByDefault(Context context) {
+        return getSharedPreferences(context).getBoolean(SAVE_USER_LOCATIONS_DEFAULT, false);
+    }
+
+    public static boolean setSaveUserLocation(Context context){
+        return editSharedPreferences(context).putBoolean(SAVE_USER_LOCATIONS, true).commit();
+    }
+
+    public static boolean isSaveUserLocationEnabled(Context context){
+        return getSharedPreferences(context).getBoolean(SAVE_USER_LOCATIONS, false);
+    }
+
+    public static boolean saveGeocodedAddressToPrefs(Context context, String addressList){
+        return editSharedPreferences(context).putString(GEOCODE_ADDRESSES, addressList).commit();
+    }
+
+    public static String getGeocodedAddressList(Context context){
+        return getSharedPreferences(context).getString(GEOCODE_ADDRESSES, null);
+    }
 }
