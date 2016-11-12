@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.neek.tech.permissions.listeners.PermissionDenied;
 import com.neek.tech.permissions.listeners.PermissionGranted;
@@ -46,6 +47,8 @@ public class PermissionUtils implements PermissionListener {
     public static void initialize(Context context) {
         if (singleton == null) {
             singleton = new PermissionUtils(context);
+            Log.d(TAG, "Initialized");
+
         }
     }
 

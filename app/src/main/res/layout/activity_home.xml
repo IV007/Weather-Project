@@ -9,8 +9,7 @@
     android:orientation="vertical"
     >
 
-    <include layout="@layout/weather_toolbar"/>
-
+    <!--<include layout="@layout/weather_toolbar"/>-->
 
     <LinearLayout
         android:id="@+id/container"

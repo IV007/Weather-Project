@@ -77,7 +77,7 @@ public class HomeFragment extends BaseFragment {
         mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
-                return ContextCompat.getColor(getActivity(), R.color.colorAccent);
+                return ContextCompat.getColor(getActivity(), R.color.colorPrimaryLight1);
             }
         });
 

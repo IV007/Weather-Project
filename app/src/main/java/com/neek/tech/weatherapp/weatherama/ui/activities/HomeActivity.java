@@ -1,8 +1,11 @@
 package com.neek.tech.weatherapp.weatherama.ui.activities;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.neek.tech.permissions.runtime_permission.PermissionConstants;
 import com.neek.tech.permissions.runtime_permission.PermissionUtils;
@@ -13,7 +16,6 @@ import com.neek.tech.weatherapp.weatherama.controllers.WeatherController;
 import com.neek.tech.weatherapp.weatherama.model.weather.Weather;
 import com.neek.tech.weatherapp.weatherama.ui.HomeActivityListener;
 import com.neek.tech.weatherapp.weatherama.ui.fragments.HomeFragment;
-import com.neek.tech.weatherapp.weatherama.utilities.Constants;
 import com.neek.tech.weatherapp.weatherama.utilities.LocationUtils;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 import com.neek.tech.weatherapp.weatherama.utilities.NetworkUtils;
@@ -61,7 +63,10 @@ public class HomeActivity extends BaseActivity implements
 
         if (!PermissionUtils.hasPermission(this, PermissionConstants.LOCATION_PERMISSION)) {
 
-            showRuntimePermissionFragment(PermissionConstants.LOCATION);
+            if(!showRuntimePermissionFragment(PermissionConstants.LOCATION)){
+                WeatherController.setHomeActivityView(this);
+                WeatherController.getInstance().fetchWeatherData(WeatherController.getUserLocationFromPrefs(this));
+            }
 
         } else {
             if (LocationUtils.isLocationServicesEnabled(this))
@@ -75,19 +80,33 @@ public class HomeActivity extends BaseActivity implements
     protected void onPause() {
         super.onPause();
         WeatherLocationManager.disconnect();
-        WeatherLocationManager.removeUpdates();
+        WeatherLocationManager.removeUpdates(this);
 
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_settings){
+            //Show settings Activity.
+            startActivity(new Intent(this, SettingsActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void fetchWeatherData(final Location location) {
         if (NetworkUtils.isNetworkAvailable(this)) {
             if (location != null) {
-                String url = Constants.FORECAST_URL
-                        .replace("[latitude]", Double.toString(location.getLatitude()))
-                        .replace("[longitude]", Double.toString(location.getLongitude()));
                 showProgressDialog();
                 WeatherController.setHomeActivityView(this);
-                WeatherController.getInstance().fetchWeatherData(url);
+                WeatherController.getInstance().fetchWeatherData(location);
             }
         } else {
             showErrorDialog(getString(R.string.network_unavailable_title), getString(R.string.network_unavailable_message));

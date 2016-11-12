@@ -5,17 +5,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.neek.tech.weatherapp.weatherama.ui.activities.RuntimePermissionActivity;
 import com.neek.tech.weatherapp.R;
+import com.neek.tech.weatherapp.weatherama.ui.activities.RuntimePermissionActivity;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 import com.neek.tech.weatherapp.weatherama.utilities.WeatherErrorDialog;
 import com.neek.tech.weatherapp.weatherama.utilities.WeatheramaPreferences;
@@ -23,7 +23,7 @@ import com.neek.tech.weatherapp.weatherama.utilities.WeatheramaPreferences;
 /**
  * Super class for all Activity's
  */
-public abstract class BaseActivity extends FragmentActivity implements BaseView {
+public abstract class BaseActivity extends AppCompatActivity implements BaseView {
 
     private static final String TAG = "BaseActivity";
 
@@ -78,14 +78,24 @@ public abstract class BaseActivity extends FragmentActivity implements BaseView 
     public void showProgressDialog() {
 
         if (progressIndicator != null){
-            progressIndicator.setVisibility(View.VISIBLE);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressIndicator.setVisibility(View.VISIBLE);
+                }
+            });
         }
     }
 
     @Override
     public void hideProgressDialog() {
         if (progressIndicator != null){
-            progressIndicator.setVisibility(View.GONE);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressIndicator.setVisibility(View.GONE);
+                }
+            });
         }
     }
 
@@ -230,15 +240,20 @@ public abstract class BaseActivity extends FragmentActivity implements BaseView 
         alertDialog.show();
     }
 
-    public void showRuntimePermissionFragment(String permissionType){
+    public boolean showRuntimePermissionFragment(String permissionType){
         if (getApplicationContext() == null)
-            return;
+            return false;
 
+        boolean result = false;
         if (!WeatheramaPreferences.isUserLocationRationaleShown(this)) {
             Log.i(TAG, "Launching Runtime permission activity for type " + permissionType);
             Intent intent = new Intent(this, RuntimePermissionActivity.class);
             intent.putExtra(RuntimePermissionActivity.TAG, permissionType);
             startActivity(intent);
+            result = true;
         }
+        return result;
     }
+
+
 }
