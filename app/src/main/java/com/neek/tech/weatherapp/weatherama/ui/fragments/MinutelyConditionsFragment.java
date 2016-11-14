@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.neek.tech.weatherapp.R;
@@ -36,7 +37,7 @@ public class MinutelyConditionsFragment extends BaseFragment implements HomeActi
 
     @Nullable
     @BindView(R.id.minuteListView)
-    protected MinuteListView mMinuteListView;
+    protected ListView mMinuteListView;
 
     private MinutelyAdapter mMinutelyAdapter;
 
@@ -103,7 +104,7 @@ public class MinutelyConditionsFragment extends BaseFragment implements HomeActi
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     mMinuteListView.setBackground(WeatherUtils.setLayoutBackground(getActivity(), minuteWeather.getIcon()));
                 }   else {
-                    mMinuteListView.setBackgroundResource(WeatherUtils.setLayoutBackground(minuteWeather.getIcon()));
+                    mMinuteListView.setBackgroundResource(WeatherUtils.setLayoutBackgroundResource(minuteWeather.getIcon()));
                 }
             }
         }
@@ -112,26 +113,23 @@ public class MinutelyConditionsFragment extends BaseFragment implements HomeActi
     public class MinutelyAdapter extends BaseAdapter  {
 
 
-        private ArrayList<MinutelyAdapter.MinuteData> mMinuteDatas;
+        private ArrayList<MinuteWeather.MinuteData> mMinuteDataArrayList;
         private Context mContext;
 
-        public MinutelyAdapter(ArrayList<MinuteWeather> minuteDatas, Context context)   {
-            minuteDatas = minuteDatas;
+        public MinutelyAdapter(ArrayList<MinuteWeather.MinuteData> minuteDataList, Context context)   {
+            mMinuteDataArrayList = minuteDataList;
             mContext = context;
         }
 
         @Override
         public int getCount()   {
-            if (mMinuteDatas != null)   {
-                return mMinuteDatas.size();
-            }
-            return 0;
+            return (mMinuteDataArrayList != null) ? mMinuteDataArrayList.size() : 0;
         }
 
         @Override
         public Object getItem(int position) {
-            if (mMinuteDatas != null)   {
-                return mMinuteDatas.get(position);
+            if (mMinuteDataArrayList != null)   {
+                return mMinuteDataArrayList.get(position);
             }
             return null;
         }
@@ -152,8 +150,8 @@ public class MinutelyConditionsFragment extends BaseFragment implements HomeActi
                 viewHolder = (ItemViewHolder) convertView.getTag();
             }
 
-            if (mMinuteDatas != null) {
-                MinuteWeather.MinuteData minuteData = mMinuteDatas.get(position);
+            if (mMinuteDataArrayList != null && mMinuteDataArrayList.size() > 0) {
+                MinuteWeather.MinuteData minuteData = mMinuteDataArrayList.get(position);
                 if (minuteData != null) {
                     if (!TextUtils.isEmpty(minuteData.getIcon()) && viewHolder.iconImageView != null) {
                         viewHolder.iconImageView.setImageDrawable(WeatherUtils.getIconId(mContext, minuteData.getIcon()));
@@ -184,7 +182,7 @@ public class MinutelyConditionsFragment extends BaseFragment implements HomeActi
             @BindView(R.id.summaryLabel)
             TextView summaryLabel;
 
-            public ItemViewHolder(View view) {
+            ItemViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
         }

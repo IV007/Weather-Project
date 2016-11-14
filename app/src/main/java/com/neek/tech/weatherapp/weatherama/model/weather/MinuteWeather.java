@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Minutely weather model.
@@ -19,7 +18,7 @@ public class MinuteWeather implements Serializable {
     private String icon;
 
     @SerializedName("data")
-    private List<MinuteData> data = new ArrayList<>();
+    private ArrayList<MinuteData> data = new ArrayList<>();
 
     /**
      *
@@ -62,7 +61,7 @@ public class MinuteWeather implements Serializable {
      * @return
      * The data
      */
-    public List<MinuteData> getData() {
+    public ArrayList<MinuteData> getData() {
         return data;
     }
 
@@ -71,11 +70,11 @@ public class MinuteWeather implements Serializable {
      * @param data
      * The data
      */
-    public void setData(List<MinuteData> data) {
+    public void setData(ArrayList<MinuteData> data) {
         this.data = data;
     }
 
-    private class MinuteData implements Serializable  {
+    public class MinuteData implements Serializable  {
 
         @SerializedName("time")
         private long time;

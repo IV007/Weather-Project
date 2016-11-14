@@ -83,21 +83,20 @@ public class HomeFragment extends BaseFragment {
 
         ArrayList<BaseFragment> mFragments = new ArrayList<>(4);
         mFragments.add(CurrentConditionsFragment.newInstance());
-        mFragments.add(MinutelyConditionsFragment.newInstance());
+//        mFragments.add(MinutelyConditionsFragment.newInstance());
         mFragments.add(HourlyConditionsFragment.newInstance());
         mFragments.add(DailyConditionsFragment.newInstance());
 
         HomeScreenPagerAdapter adapter = new HomeScreenPagerAdapter(getChildFragmentManager(), mFragments);
         mViewPager.setAdapter(adapter);
         mViewPager.setCurrentItem(0);
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(2); //TODO - if you add MinuteWeather to mFragments, then increment by 1.
 
         mSlidingTabLayout.setViewPager(mViewPager);
     }
 
     private class HomeScreenPagerAdapter extends FragmentStatePagerAdapter {
 
-        private static final int COUNT = 4;
         private ArrayList<BaseFragment> fragmentList;
 
         public HomeScreenPagerAdapter(FragmentManager fm, ArrayList<BaseFragment> fragments) {
@@ -112,22 +111,31 @@ public class HomeFragment extends BaseFragment {
 
         @Override
         public int getCount() {
-            return COUNT;
+            return (fragmentList != null) ? fragmentList.size() : 0;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return getString(R.string.current_conditions);
-                case 1:
-                    return getString(R.string.minutely_conditions);
-                case 2:
-                    return getString(R.string.hourly_conditions);
-                case 3:
-                    return getString(R.string.daily_conditions);
+
+            if (fragmentList.get(position) instanceof CurrentConditionsFragment) {
+
+                return getString(R.string.current_conditions);
+
+            } else if (fragmentList.get(position) instanceof MinutelyConditionsFragment) {
+
+                return getString(R.string.minutely_conditions);
+
+            } else if (fragmentList.get(position) instanceof HourlyConditionsFragment) {
+
+                return getString(R.string.hourly_conditions);
+
+            } else if (fragmentList.get(position) instanceof DailyConditionsFragment) {
+
+                return getString(R.string.daily_conditions);
 
             }
+
+
             return "";
         }
     }
