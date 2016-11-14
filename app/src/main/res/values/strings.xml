@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Weatherama</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="remove">Remove</string>
+    <string name="cancel">Cancel</string>
 
     <!--Menu -->
     <string name="settings_menu">Settings</string>
@@ -13,6 +17,9 @@
     <string name="okhttp_error_title">Something\'s up</string>
     <string name="okhttp_error_message">For some reason we couldn\'t retrieve weather info, \nplease refresh or try again later</string>
 
+    <!--Settings-->
+    <string name="set_address_message">Do you wish to use this address as your current location</string>
+    <string name="remove_address_message">Do you wish to remove this address as your current location</string>
     <string name="enable_location_permission">Enable Location Services</string>
 
     <string name="current_conditions">Now</string>

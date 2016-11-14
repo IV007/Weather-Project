@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.base.BaseFragment;
 import com.neek.tech.weatherapp.weatherama.controllers.WeatherController;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
+import com.neek.tech.weatherapp.weatherama.utilities.WeatheramaDialog;
 
 import java.util.List;
 
@@ -34,7 +36,7 @@ import butterknife.OnClick;
  * Settings fragment
  */
 public class SettingsFragment extends BaseFragment implements
-        PermissionUtils.PermissionListener{
+        PermissionUtils.PermissionListener {
 
     private static final String TAG = SettingsFragment.class.getSimpleName();
 
@@ -48,7 +50,12 @@ public class SettingsFragment extends BaseFragment implements
 
     private SettingsAdapter mAdapter;
 
-    public static SettingsFragment newInstance(){
+    private String mSelectedAddress;
+
+    private SparseBooleanArray mCheckedItems;
+
+
+    public static SettingsFragment newInstance() {
         return new SettingsFragment();
     }
 
@@ -57,7 +64,6 @@ public class SettingsFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
         Logger.create(TAG);
         mAddressList = WeatherController.getSavedUserLocations(getActivity());
-
     }
 
     @Override
@@ -78,21 +84,23 @@ public class SettingsFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
 
+        mSelectedAddress = WeatherController.getSelectedAddress(getActivity());
+        Logger.i(TAG, "Selected address " + mSelectedAddress);
         setLocationButtonState();
         initializeAdapter();
 
     }
 
     @OnClick(value = R.id.enableLocationButton)
-    public void onEnableLocationClicked(){
+    public void onEnableLocationClicked() {
         PermissionUtils.with(this).requestPermission(PermissionConstants.LOCATION_PERMISSION);
     }
 
     private void setLocationButtonState() {
         if (!PermissionUtils.hasPermission(getActivity(), PermissionConstants.LOCATION_PERMISSION) &&
-                PermissionUtils.isAndroidOSMarshmallowOrAbove()){
+                PermissionUtils.isAndroidOSMarshmallowOrAbove()) {
 
-            if (mEnableLocationButton != null && mEnableLocationButton.getVisibility() == View.GONE){
+            if (mEnableLocationButton != null && mEnableLocationButton.getVisibility() == View.GONE) {
                 Animation fadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
                 mEnableLocationButton.setVisibility(View.VISIBLE);
                 mEnableLocationButton.startAnimation(fadeIn);
@@ -101,7 +109,7 @@ public class SettingsFragment extends BaseFragment implements
 
         } else {
 
-            if (mEnableLocationButton != null && mEnableLocationButton.getVisibility() == View.VISIBLE){
+            if (mEnableLocationButton != null && mEnableLocationButton.getVisibility() == View.VISIBLE) {
                 Animation fadeOut = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out);
                 mEnableLocationButton.startAnimation(fadeOut);
                 mEnableLocationButton.setVisibility(View.GONE);
@@ -114,10 +122,16 @@ public class SettingsFragment extends BaseFragment implements
             mAdapter = new SettingsAdapter(getActivity(), mAddressList);
         }
 
+        mCheckedItems.clear();
         mListView.setAdapter(mAdapter);
     }
 
-
+    private void refreshAdapter() {
+        mSelectedAddress = WeatherController.getSelectedAddress(getActivity());
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     public String getFragmentTag() {
@@ -140,13 +154,16 @@ public class SettingsFragment extends BaseFragment implements
         PermissionUtils.with(this).continueRequest();
     }
 
-    class SettingsAdapter extends BaseAdapter{
+    class SettingsAdapter extends BaseAdapter {
 
         private List<String> addresses;
         private Context mContext;
-        public SettingsAdapter(Context context, List<String> addresses) {
+
+
+        SettingsAdapter(Context context, List<String> addresses) {
             this.mContext = context;
             this.addresses = addresses;
+            mCheckedItems = new SparseBooleanArray();
         }
 
         @Override
@@ -165,11 +182,11 @@ public class SettingsFragment extends BaseFragment implements
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final SettingsItemViewHolder vh;
 
-            if (convertView == null){
+            if (convertView == null) {
                 convertView = inflater.inflate(R.layout.item_settings, parent, false);
                 vh = new SettingsItemViewHolder(convertView);
                 convertView.setTag(vh);
@@ -177,17 +194,34 @@ public class SettingsFragment extends BaseFragment implements
                 vh = (SettingsItemViewHolder) convertView.getTag();
             }
 
-            if (addresses != null && addresses.size() > 0){
+            if (addresses != null && addresses.size() > 0) {
                 final String address = addresses.get(position);
-                if (!TextUtils.isEmpty(address) && vh.addressLabel != null){
+                if (!TextUtils.isEmpty(address) && vh.addressLabel != null) {
                     vh.addressLabel.setText(address);
                 }
 
-                if (vh.addressCheckbox != null){
+                if (vh.addressCheckbox != null) {
+
+                    if (!TextUtils.isEmpty(mSelectedAddress) &&
+                            mSelectedAddress.equalsIgnoreCase(address)) {
+                        mCheckedItems.put(position, true);
+                        if (mCheckedItems != null) {
+                            vh.addressCheckbox.setChecked(mCheckedItems.get(position));
+                        }
+                    }
+
                     vh.addressCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            vh.addressCheckbox.setChecked(isChecked);
+
+                            boolean enabled = mCheckedItems.get(position);
+                            if (!address.equalsIgnoreCase(mSelectedAddress) && !enabled && isChecked){
+                                showUseAddressConfirmationDialog(mContext, address, position);
+                            }
+
+                            if (enabled && !isChecked){
+                                showRemoveAddressConfirmationDialog(mContext, position);
+                            }
                         }
                     });
                 }
@@ -197,7 +231,7 @@ public class SettingsFragment extends BaseFragment implements
         }
 
 
-        class SettingsItemViewHolder{
+        class SettingsItemViewHolder {
 
             @BindView(R.id.addressLabel)
             TextView addressLabel;
@@ -205,10 +239,71 @@ public class SettingsFragment extends BaseFragment implements
             @BindView(R.id.addressCheckbox)
             CheckBox addressCheckbox;
 
-
-            public SettingsItemViewHolder(View v) {
+            SettingsItemViewHolder(View v) {
                 ButterKnife.bind(this, v);
             }
         }
     }
+
+    private void showUseAddressConfirmationDialog(final Context context, final String address, final int position) {
+        WeatheramaDialog dialog = WeatheramaDialog.newInstance(null, getString(R.string.set_address_message),
+                getString(R.string.yes), getString(R.string.no),
+                new WeatheramaDialog.DialogClickedButton() {
+                    @Override
+                    public void onClickedButton(WeatheramaDialog dialog, int id, View v) {
+                        if (id == WeatheramaDialog.POSITIVE_BUTTON) {
+
+                            WeatherController.setSelectedAddress(context, address);
+
+                            if (mCheckedItems != null) {
+                                mCheckedItems.put(position, true);
+
+                            }
+
+                        } else if (id == WeatheramaDialog.NEGATIVE_BUTTON) {
+                            //Do nothing
+                            if (mCheckedItems != null) {
+                                mCheckedItems.put(position, false);
+
+                            }
+                        }
+                        refreshAdapter();
+
+                    }
+                });
+        dialog.setCancelable(false);
+        dialog.show(getFragmentManager(), WeatheramaDialog.TAG);
+    }
+
+
+    private void showRemoveAddressConfirmationDialog(final Context context, final int position) {
+        WeatheramaDialog dialog = WeatheramaDialog.newInstance(null, getString(R.string.set_address_message),
+                getString(R.string.remove), getString(R.string.cancel),
+                new WeatheramaDialog.DialogClickedButton() {
+                    @Override
+                    public void onClickedButton(WeatheramaDialog dialog, int id, View v) {
+                        if (id == WeatheramaDialog.POSITIVE_BUTTON) {
+
+                            WeatherController.setSelectedAddress(context, null);
+
+                            if (mCheckedItems != null) {
+                                mCheckedItems.put(position, false);
+                            }
+
+                        } else if (id == WeatheramaDialog.NEGATIVE_BUTTON) {
+                            //Do nothing
+                            if (mCheckedItems != null) {
+                                mCheckedItems.put(position, true);
+                            }
+                        }
+                        refreshAdapter();
+
+
+                    }
+                });
+        dialog.setCancelable(false);
+        dialog.show(getFragmentManager(), WeatheramaDialog.TAG);
+    }
+
+
 }

@@ -17,6 +17,7 @@ public class WeatheramaPreferences {
     private static final String SAVE_USER_LOCATIONS_DEFAULT = "SaveUserLocations";
     private static final String SAVE_USER_LOCATIONS = "SaveUserLocations";
     private static final String GEOCODE_ADDRESSES = "GEOCODE_ADDRESSES";
+    private static final String SELECTED_ADDRESS = "SELECTED_ADDRESS";
 
 
     public static SharedPreferences getSharedPreferences(Context context) {
@@ -73,5 +74,12 @@ public class WeatheramaPreferences {
 
     public static String getGeocodedAddressList(Context context){
         return getSharedPreferences(context).getString(GEOCODE_ADDRESSES, null);
+    }
+    public static boolean saveSelectedAddress(Context context, String address){
+        return editSharedPreferences(context).putString(SELECTED_ADDRESS, address).commit();
+    }
+
+    public static String getSelectedAddress(Context context){
+        return getSharedPreferences(context).getString(SELECTED_ADDRESS, null);
     }
 }

@@ -10,7 +10,7 @@ import com.neek.tech.weatherapp.weatherama.ui.fragments.SettingsFragment;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 
 /**
- * Created by ivanutsalo on 11/11/16.
+ * Settings Activity for in app settings.
  */
 public class SettingsActivity extends BaseActivity {
 

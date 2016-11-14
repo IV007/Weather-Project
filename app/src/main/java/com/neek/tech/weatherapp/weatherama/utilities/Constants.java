@@ -23,4 +23,6 @@ public class Constants {
     public static final String REVERSE_GEOCODED_LOCATION_DATA_EXTRA = PACKAGE_NAME +
             ".REVERSE_GEOCODED_LOCATION_DATA_EXTRA";
 
+
+    //TODO - Handle exceptions from OkHttp- UnknownHostException, NetworkTimeoutException
 }

@@ -6,5 +6,7 @@
     <dimen name="tab_padding">16dp</dimen>
     <dimen name="previous_location_text_size">18sp</dimen>
     <dimen name="rounded_corner_radius">10dp</dimen>
+    <dimen name="margin_between_texts">8dp</dimen>
+    <dimen name="general_padding">12dp</dimen>
 
 </resources>

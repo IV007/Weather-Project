@@ -14,4 +14,49 @@
         <item name="android:colorControlActivated" tools:targetApi="lollipop">@color/colorPrimary</item>
     </style>
 
+    <style name="ActionSheetTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="WeatherDialog" parent="ActionSheetTheme"/>
+
+
+    <style name="WeatheramaDialogTitle">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_marginBottom">0sp</item>
+    </style>
+
+    <style name="WeatheramaDialogMessage">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginBottom">0sp</item>
+    </style>
+
+    <style name="WeatheramaDialogPositiveButton">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/colorPrimaryLight1</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginLeft">6sp</item>
+        <item name="android:layout_marginRight">6sp</item>
+        <item name="android:background">@drawable/dialog_accept_button</item>
+        <item name="android:minWidth">144sp</item>
+    </style>
+
+    <style name="WeatheramaDialogNegativeButton">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:layout_marginRight">6sp</item>
+        <item name="android:minWidth">144sp</item>
+        <item name="android:background">@drawable/dialog_refuse_button</item>
+    </style>
+
 </resources>

@@ -80,7 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@color/button_dark_green"
+            android:background="@drawable/enable_location_corner"
             android:text="@string/button_allow"
             android:textColor="@color/button_light_green"
             />
@@ -89,7 +89,7 @@
             android:id="@+id/declineButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/button_dark_red"
+            android:background="@drawable/refuse_location_corner"
             android:text="@string/button_refuse"
             android:textColor="@color/button_light_red"
             />

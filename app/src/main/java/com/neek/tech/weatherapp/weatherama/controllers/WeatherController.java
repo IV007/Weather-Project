@@ -116,6 +116,8 @@ public class WeatherController implements WeatherUpdater {
 
                     ReverseGeocodeAddress address = mappedAddress.get(i);
 
+                    Logger.i(TAG, "Address set - " + singleton.mSelectedAddress);
+
                     if (TextUtils.isEmpty(singleton.mSelectedAddress)) {
                         result = address;
                     } else if (address.getKey().equalsIgnoreCase(singleton.mSelectedAddress)) {
@@ -250,8 +252,14 @@ public class WeatherController implements WeatherUpdater {
 
     }
 
-    public static void setSelectedAddress(String address) {
+    public static void setSelectedAddress(Context context, final String address) {
         singleton.mSelectedAddress = address;
+        WeatheramaPreferences.saveSelectedAddress(context, address);
+        Logger.i(TAG, "Address set - " + address);
+    }
+
+    public static String getSelectedAddress(Context context) {
+        return (!TextUtils.isEmpty(singleton.mSelectedAddress) ? singleton.mSelectedAddress : WeatheramaPreferences.getSelectedAddress(context));
     }
 
     public static void setHomeActivityView(HomeActivityView view) {
