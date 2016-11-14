@@ -18,7 +18,6 @@ import com.neek.tech.weatherapp.weatherama.ui.HomeActivityListener;
 import com.neek.tech.weatherapp.weatherama.ui.fragments.HomeFragment;
 import com.neek.tech.weatherapp.weatherama.utilities.LocationUtils;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
-import com.neek.tech.weatherapp.weatherama.utilities.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,19 +59,21 @@ public class HomeActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        if (LocationUtils.isNetworkAvailable(this)) {
+            if (!PermissionUtils.hasPermission(this, PermissionConstants.LOCATION_PERMISSION)) {
 
-        if (!PermissionUtils.hasPermission(this, PermissionConstants.LOCATION_PERMISSION)) {
+                if (!showRuntimePermissionFragment(PermissionConstants.LOCATION)) {
+                    fetchWeatherData(null);
+                }
 
-            if(!showRuntimePermissionFragment(PermissionConstants.LOCATION)){
-                WeatherController.setHomeActivityView(this);
-                WeatherController.getInstance().fetchWeatherData(WeatherController.getUserLocationFromPrefs(this));
+            } else {
+                if (LocationUtils.isLocationServicesEnabled(this))
+                    connect();
+                else
+                    showGpsDisabledDialog();
             }
-
         } else {
-            if (LocationUtils.isLocationServicesEnabled(this))
-                connect();
-            else
-                showGpsDisabledDialog();
+            showErrorDialog(getString(R.string.network_unavailable_title), getString(R.string.network_unavailable_message));
         }
     }
 
@@ -94,7 +95,7 @@ public class HomeActivity extends BaseActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_settings){
+        if (item.getItemId() == R.id.menu_settings) {
             //Show settings Activity.
             startActivity(new Intent(this, SettingsActivity.class));
         }
@@ -102,15 +103,16 @@ public class HomeActivity extends BaseActivity implements
     }
 
     private void fetchWeatherData(final Location location) {
-        if (NetworkUtils.isNetworkAvailable(this)) {
-            if (location != null) {
-                showProgressDialog();
-                WeatherController.setHomeActivityView(this);
-                WeatherController.getInstance().fetchWeatherData(location);
-            }
+
+        WeatherController.setHomeActivityView(this);
+
+        if (location != null) {
+            showProgressDialog();
+            WeatherController.getInstance().fetchWeatherData(location);
         } else {
-            showErrorDialog(getString(R.string.network_unavailable_title), getString(R.string.network_unavailable_message));
+            WeatherController.getInstance().fetchWeatherData(WeatherController.getUserLocationFromPrefs(this));
         }
+
     }
 
     @Override
@@ -141,17 +143,14 @@ public class HomeActivity extends BaseActivity implements
     }
 
     private void connect() {
-        if (PermissionUtils.hasPermission(this, PermissionConstants.LOCATION_PERMISSION)) {
-            WeatherLocationManager.setLocationUpdater(this);
+        WeatherLocationManager.setLocationUpdater(this);
 
-            if (!WeatherLocationManager.isLocationServicesConnected()) {
-                WeatherLocationManager.connect(this);
-            } else {
-                WeatherLocationManager.getLastLocation(this);
-            }
+        if (!WeatherLocationManager.isLocationServicesConnected()) {
+            WeatherLocationManager.connect(this);
         } else {
-            showRuntimePermissionFragment(PermissionConstants.LOCATION);
+            WeatherLocationManager.getLastLocation(this);
         }
+
 
     }
 

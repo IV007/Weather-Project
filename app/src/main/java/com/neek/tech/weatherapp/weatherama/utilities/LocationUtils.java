@@ -2,6 +2,8 @@ package com.neek.tech.weatherapp.weatherama.utilities;
 
 import android.content.Context;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 /**
  * Utility class for location related work.
@@ -25,5 +27,12 @@ public class LocationUtils {
         }
 
         return ret;
+    }
+
+    public static boolean isNetworkAvailable(Context context){
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 }
