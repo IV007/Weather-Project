@@ -128,6 +128,7 @@ public class SettingsFragment extends BaseFragment implements
 
     private void refreshAdapter() {
         mSelectedAddress = WeatherController.getSelectedAddress(getActivity());
+        Logger.i(TAG, "mSelectedAddress " + mSelectedAddress);
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
@@ -158,6 +159,7 @@ public class SettingsFragment extends BaseFragment implements
 
         private List<String> addresses;
         private Context mContext;
+        private boolean status = true;
 
 
         SettingsAdapter(Context context, List<String> addresses) {
@@ -200,36 +202,45 @@ public class SettingsFragment extends BaseFragment implements
                     vh.addressLabel.setText(address);
                 }
 
-                if (vh.addressCheckbox != null) {
 
-                    if (!TextUtils.isEmpty(mSelectedAddress) &&
-                            mSelectedAddress.equalsIgnoreCase(address)) {
-                        mCheckedItems.put(position, true);
-                        if (mCheckedItems != null) {
-                            vh.addressCheckbox.setChecked(mCheckedItems.get(position));
-                        }
-                    }
+                if (vh.addressCheckbox != null) {
 
                     vh.addressCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                            boolean enabled = mCheckedItems.get(position);
-                            if (!address.equalsIgnoreCase(mSelectedAddress) && !enabled && isChecked){
-                                showUseAddressConfirmationDialog(mContext, address, position);
+                            if (!status) {
+                                status = true;
+                                return;
+
                             }
 
-                            if (enabled && !isChecked){
+                            if (isChecked) {
+                                showUseAddressConfirmationDialog(mContext, address, position);
+
+                            } else {
                                 showRemoveAddressConfirmationDialog(mContext, position);
+
                             }
                         }
                     });
+
+                    if (!TextUtils.isEmpty(mSelectedAddress) &&
+                            mSelectedAddress.equalsIgnoreCase(address)) {
+                        setCheckBoxState(vh, true);
+                    } else {
+                        setCheckBoxState(vh, false);
+                    }
                 }
             }
 
             return convertView;
         }
 
+        public void setCheckBoxState(SettingsItemViewHolder vh, boolean isChecked) {
+            status = vh.addressCheckbox.isChecked() == isChecked;
+            vh.addressCheckbox.setChecked(isChecked);
+        }
 
         class SettingsItemViewHolder {
 
@@ -243,6 +254,10 @@ public class SettingsFragment extends BaseFragment implements
                 ButterKnife.bind(this, v);
             }
         }
+
+        public void setStatus(boolean status) {
+            this.status = status;
+        }
     }
 
     private void showUseAddressConfirmationDialog(final Context context, final String address, final int position) {
@@ -255,17 +270,11 @@ public class SettingsFragment extends BaseFragment implements
 
                             WeatherController.setSelectedAddress(context, address);
 
-                            if (mCheckedItems != null) {
-                                mCheckedItems.put(position, true);
-
-                            }
+                            updateBooleanArray(position, true);
 
                         } else if (id == WeatheramaDialog.NEGATIVE_BUTTON) {
                             //Do nothing
-                            if (mCheckedItems != null) {
-                                mCheckedItems.put(position, false);
-
-                            }
+                            updateBooleanArray(position, false);
                         }
                         refreshAdapter();
 
@@ -277,7 +286,7 @@ public class SettingsFragment extends BaseFragment implements
 
 
     private void showRemoveAddressConfirmationDialog(final Context context, final int position) {
-        WeatheramaDialog dialog = WeatheramaDialog.newInstance(null, getString(R.string.set_address_message),
+        WeatheramaDialog dialog = WeatheramaDialog.newInstance(null, getString(R.string.remove_address_message),
                 getString(R.string.remove), getString(R.string.cancel),
                 new WeatheramaDialog.DialogClickedButton() {
                     @Override
@@ -286,15 +295,14 @@ public class SettingsFragment extends BaseFragment implements
 
                             WeatherController.setSelectedAddress(context, null);
 
-                            if (mCheckedItems != null) {
-                                mCheckedItems.put(position, false);
+                            updateBooleanArray(position, false);
+                            if (mAdapter != null) {
+                                mAdapter.setStatus(false);
                             }
 
                         } else if (id == WeatheramaDialog.NEGATIVE_BUTTON) {
                             //Do nothing
-                            if (mCheckedItems != null) {
-                                mCheckedItems.put(position, true);
-                            }
+                            updateBooleanArray(position, true);
                         }
                         refreshAdapter();
 
@@ -305,5 +313,20 @@ public class SettingsFragment extends BaseFragment implements
         dialog.show(getFragmentManager(), WeatheramaDialog.TAG);
     }
 
+    private void updateBooleanArray(int position, boolean enable) {
+        if (mCheckedItems != null) {
+            Logger.i(TAG, "Position - " + position + ", enable - " + enable);
+            if (mCheckedItems.size() == 0) {
+                mCheckedItems.put(position, enable);
+            } else if (mCheckedItems.size() > 0) {
+                for (int i = 0; i < mCheckedItems.size(); i++) {
+                    if (mCheckedItems.keyAt(i) != position) {
+                        mCheckedItems.put(i, false);
+                    }
+                }
+                mCheckedItems.put(position, enable);
 
+            }
+        }
+    }
 }
