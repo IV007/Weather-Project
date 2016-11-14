@@ -86,6 +86,45 @@ public class MinuteWeather implements Serializable {
         @SerializedName("precipProbability")
         private double precipProbability;
 
+        @SerializedName("summary")
+        private String summary;
+
+        @SerializedName("icon")
+        private String icon;
+
+        @SerializedName("temperature")
+        private Double temperature;
+
+        @SerializedName("apparentTemperature")
+        private Double apparentTemperature;
+
+        @SerializedName("dewPoint")
+        private Double dewPoint;
+
+        @SerializedName("humidity")
+        private Double humidity;
+
+        @SerializedName("windSpeed")
+        private Double windSpeed;
+
+        @SerializedName("windBearing")
+        private Integer windBearing;
+
+        @SerializedName("visibility")
+        private double visibility;
+
+        @SerializedName("cloudCover")
+        private Double cloudCover;
+
+        @SerializedName("pressure")
+        private Double pressure;
+
+        @SerializedName("ozone")
+        private Double ozone;
+
+        @SerializedName("precipType")
+        private String precipType;
+
         /**
          *
          * @return
@@ -140,6 +179,109 @@ public class MinuteWeather implements Serializable {
             this.precipProbability = precipProbability;
         }
 
+        public String getSummary() {
+            return summary;
+        }
+
+        public void setSummary(String summary) {
+            this.summary = summary;
+        }
+
+        public String getIcon() {
+            return icon;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
+
+        public Double getTemperature() {
+            return temperature;
+        }
+
+        public void setTemperature(Double temperature) {
+            this.temperature = temperature;
+        }
+
+        public Double getApparentTemperature() {
+            return apparentTemperature;
+        }
+
+        public void setApparentTemperature(Double apparentTemperature) {
+            this.apparentTemperature = apparentTemperature;
+        }
+
+        public Double getDewPoint() {
+            return dewPoint;
+        }
+
+        public void setDewPoint(Double dewPoint) {
+            this.dewPoint = dewPoint;
+        }
+
+        public Double getHumidity() {
+            return humidity;
+        }
+
+        public void setHumidity(Double humidity) {
+            this.humidity = humidity;
+        }
+
+        public Double getWindSpeed() {
+            return windSpeed;
+        }
+
+        public void setWindSpeed(Double windSpeed) {
+            this.windSpeed = windSpeed;
+        }
+
+        public Integer getWindBearing() {
+            return windBearing;
+        }
+
+        public void setWindBearing(Integer windBearing) {
+            this.windBearing = windBearing;
+        }
+
+        public double getVisibility() {
+            return visibility;
+        }
+
+        public void setVisibility(double visibility) {
+            this.visibility = visibility;
+        }
+
+        public Double getCloudCover() {
+            return cloudCover;
+        }
+
+        public void setCloudCover(Double cloudCover) {
+            this.cloudCover = cloudCover;
+        }
+
+        public Double getPressure() {
+            return pressure;
+        }
+
+        public void setPressure(Double pressure) {
+            this.pressure = pressure;
+        }
+
+        public Double getOzone() {
+            return ozone;
+        }
+
+        public void setOzone(Double ozone) {
+            this.ozone = ozone;
+        }
+
+        public String getPrecipType() {
+            return precipType;
+        }
+
+        public void setPrecipType(String precipType) {
+            this.precipType = precipType;
+        }
 
         @Override
         public String toString() {
@@ -147,6 +289,19 @@ public class MinuteWeather implements Serializable {
                     "time=" + time + '\n' +
                     ", precipIntensity=" + precipIntensity + '\n' +
                     ", precipProbability=" + precipProbability + '\n' +
+                    ", summary='" + summary + '\n' +
+                    ", icon='" + icon + '\n' +
+                    ", temperature=" + temperature + '\n' +
+                    ", apparentTemperature=" + apparentTemperature + '\n' +
+                    ", dewPoint=" + dewPoint + '\n' +
+                    ", humidity=" + humidity + '\n' +
+                    ", windSpeed=" + windSpeed + '\n' +
+                    ", windBearing=" + windBearing + '\n' +
+                    ", visibility=" + visibility + '\n' +
+                    ", cloudCover=" + cloudCover + '\n' +
+                    ", pressure=" + pressure + '\n' +
+                    ", ozone=" + ozone + '\n' +
+                    ", precipType='" + precipType + '\n' +
                     '}';
         }
     }
