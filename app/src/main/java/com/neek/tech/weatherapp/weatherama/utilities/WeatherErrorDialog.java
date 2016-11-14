@@ -13,7 +13,7 @@ import android.view.View;
 
 public class WeatherErrorDialog extends DialogFragment implements View.OnClickListener {
 
-    private static final String TAG = WeatherErrorDialog.class.getSimpleName();
+    public static final String TAG = WeatherErrorDialog.class.getSimpleName();
     private static final String TITLE = "TITLE";
     private static final String MESSAGE = "MESSAGE";
 

@@ -47,41 +47,43 @@ public class FetchAddressIntentService extends IntentService {
         mResultReceiver = intent.getParcelableExtra(Constants.RECEIVER);
 
         List<Address> addresses = null;
+        if (location != null) {
 
-        try {
-            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-        } catch (IOException e) {
-            errorMessage = getString(R.string.geocoding_service_not_available);
-            Log.e(TAG, errorMessage, e);
-        } catch (IllegalArgumentException e){
-            errorMessage = getString(R.string.geocoding_invalid_lat_lng_used);
+            try {
+                addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            } catch (IOException e) {
+                errorMessage = getString(R.string.geocoding_service_not_available);
+                Log.e(TAG, errorMessage, e);
+            } catch (IllegalArgumentException e) {
+                errorMessage = getString(R.string.geocoding_invalid_lat_lng_used);
 
-            Log.e(TAG, errorMessage + ". " +
-                    "Latitude = " + location.getLatitude() +
-                    ", Longitude = " +
-                    location.getLongitude(), e);
-        }
-
-        if (addresses == null || addresses.size() == 0){
-            if (errorMessage.isEmpty()){
-                errorMessage = getString(R.string.geocoding_no_address_found);
-                Logger.e(TAG, errorMessage);
-
-                deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage, null);
+                Log.e(TAG, errorMessage + ". " +
+                        "Latitude = " + location.getLatitude() +
+                        ", Longitude = " +
+                        location.getLongitude(), e);
             }
 
-        } else {
+            if (addresses == null || addresses.size() == 0) {
+                if (errorMessage.isEmpty()) {
+                    errorMessage = getString(R.string.geocoding_no_address_found);
+                    Logger.e(TAG, errorMessage);
 
-            Address address = addresses.get(0);
-            ArrayList<String> addressFragments = new ArrayList<>();
+                    deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage, null);
+                }
 
-            for (int i = 0; i < address.getMaxAddressLineIndex(); i++){
-                addressFragments.add(address.getAddressLine(i));
+            } else {
+
+                Address address = addresses.get(0);
+                ArrayList<String> addressFragments = new ArrayList<>();
+
+                for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+                    addressFragments.add(address.getAddressLine(i));
+                }
+
+                Log.i(TAG, getString(R.string.geocoding_address_found) + ", " + addressFragments);
+                deliverResultToReceiver(Constants.SUCCESS_RESULT,
+                        TextUtils.join(System.getProperty("line.separator"), addressFragments), location);
             }
-
-            Log.i(TAG, getString(R.string.geocoding_address_found) + ", " + addressFragments);
-            deliverResultToReceiver(Constants.SUCCESS_RESULT,
-                    TextUtils.join(System.getProperty("line.separator"), addressFragments), location);
         }
     }
 

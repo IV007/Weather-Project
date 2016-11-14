@@ -27,8 +27,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
     private static final String TAG = "BaseActivity";
 
-    private static final String ERROR_DIALOG_TAG = "ERROR_DIALOG";
-
     private View progressIndicator;
 
 
@@ -71,7 +69,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     public void onError(String title, String errorMessage) {
         hideProgressDialog();
         WeatherErrorDialog dialog = WeatherErrorDialog.newInstance(title, errorMessage);
-        dialog.show(getFragmentManager(), ERROR_DIALOG_TAG);
+        dialog.show(getFragmentManager(), WeatherErrorDialog.TAG);
     }
 
     @Override
@@ -101,7 +99,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
     public void showErrorDialog(String title, String message){
         WeatherErrorDialog dialog = WeatherErrorDialog.newInstance(title, message);
-        dialog.show(getFragmentManager(), ERROR_DIALOG_TAG);
+        dialog.show(getFragmentManager(), WeatherErrorDialog.TAG);
     }
 
     /**
