@@ -8,6 +8,7 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="white">#ffffff</color>
     <color name="tab_unselected">#80FFFFFF</color>
+    <color name="grey_text">#e3e2e1</color>
     <color name="transparent">#00000000</color>
     <color name="header_background">#E0E0E0</color>
 

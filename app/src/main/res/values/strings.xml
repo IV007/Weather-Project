@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Weatherama</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="remove">Remove</string>
@@ -21,6 +20,9 @@
     <string name="set_address_message">Do you wish to use this address as your current location</string>
     <string name="remove_address_message">Do you wish to remove this address as your current location</string>
     <string name="enable_location_permission">Enable Location Services</string>
+
+    <string name="use_my_location">Use my location</string>
+    <string name="enter_address_to_search">Search by Address/City/State/Zip</string>
 
     <string name="current_conditions">Now</string>
     <string name="minutely_conditions">Minutely</string>

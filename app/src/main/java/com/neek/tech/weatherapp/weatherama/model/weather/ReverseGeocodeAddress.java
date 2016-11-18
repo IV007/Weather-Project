@@ -8,6 +8,8 @@ public class ReverseGeocodeAddress {
 
     private String key;
 
+    private String mPlaceName;
+
     private double mLatitude;
 
     private double mLongitude;
@@ -34,5 +36,13 @@ public class ReverseGeocodeAddress {
 
     public void setLongitude(double longitude) {
         mLongitude = longitude;
+    }
+
+    public String getPlaceName() {
+        return mPlaceName;
+    }
+
+    public void setPlaceName(String placeName) {
+        mPlaceName = placeName;
     }
 }

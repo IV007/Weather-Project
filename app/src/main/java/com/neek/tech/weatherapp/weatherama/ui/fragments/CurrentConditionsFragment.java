@@ -43,11 +43,9 @@ public class CurrentConditionsFragment extends BaseFragment implements HomeActiv
 
     }
 
-
     @Override
-    public void onDetach() {
-        super.onDetach();
-
+    public void onDestroy() {
+        super.onDestroy();
         if (getActivity() instanceof HomeActivity){
             ((HomeActivity) getActivity()).removeListener(this);
         }

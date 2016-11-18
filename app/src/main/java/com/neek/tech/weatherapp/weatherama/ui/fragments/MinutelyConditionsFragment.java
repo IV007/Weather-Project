@@ -66,10 +66,9 @@ public class MinutelyConditionsFragment extends BaseFragment implements HomeActi
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-
-        if (getActivity() instanceof HomeActivity) {
+    public void onDestroy() {
+        super.onDestroy();
+        if (getActivity() instanceof HomeActivity){
             ((HomeActivity) getActivity()).removeListener(this);
         }
     }

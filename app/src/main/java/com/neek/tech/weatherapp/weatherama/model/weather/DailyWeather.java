@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Daily weather model
@@ -19,7 +18,7 @@ public class DailyWeather implements Serializable {
     private String icon;
 
     @SerializedName("data")
-    private List<DailyData> data = new ArrayList<>();
+    private ArrayList<DailyData> data = new ArrayList<>();
 
     /**
      * @return The summary
@@ -52,19 +51,19 @@ public class DailyWeather implements Serializable {
     /**
      * @return The data
      */
-    public List<DailyData> getData() {
+    public ArrayList<DailyData> getData() {
         return data;
     }
 
     /**
      * @param data The data
      */
-    public void setData(List<DailyData> data) {
+    public void setData(ArrayList<DailyData> data) {
         this.data = data;
     }
 
 
-    private class DailyData implements Serializable {
+    public class DailyData implements Serializable {
 
         @SerializedName("time")
         private long time;

@@ -18,6 +18,7 @@ import com.neek.tech.weatherapp.weatherama.ui.HomeActivityListener;
 import com.neek.tech.weatherapp.weatherama.ui.fragments.HomeFragment;
 import com.neek.tech.weatherapp.weatherama.utilities.LocationUtils;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
+import com.neek.tech.weatherapp.weatherama.utilities.WeatheramaPreferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,13 +68,15 @@ public class HomeActivity extends BaseActivity implements
                 }
 
             } else {
-                if (LocationUtils.isLocationServicesEnabled(this))
+                if (!WeatheramaPreferences.didUserEnableSelectedAddress(this)) {
                     connect();
-                else
-                    showGpsDisabledDialog();
+                } else {
+                    fetchWeatherData(null);
+                }
             }
         } else {
             showErrorDialog(getString(R.string.network_unavailable_title), getString(R.string.network_unavailable_message));
+            hideProgressDialog();
         }
     }
 
@@ -110,6 +113,7 @@ public class HomeActivity extends BaseActivity implements
             showProgressDialog();
             WeatherController.getInstance().fetchWeatherData(location);
         } else {
+            showProgressDialog();
             WeatherController.getInstance().fetchWeatherData(WeatherController.getUserLocationFromPrefs(this));
         }
 
@@ -117,7 +121,7 @@ public class HomeActivity extends BaseActivity implements
 
     @Override
     public void onWeatherRetrieved(final Weather weather) {
-        Logger.d(TAG, "CurrentWeather " + weather.toString());
+        Logger.d(TAG, "Weather " + weather.toString());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -146,6 +150,7 @@ public class HomeActivity extends BaseActivity implements
         WeatherLocationManager.setLocationUpdater(this);
 
         if (!WeatherLocationManager.isLocationServicesConnected()) {
+            WeatherLocationManager.buildGoogleApiForGpsOrPlaces(this, false);
             WeatherLocationManager.connect(this);
         } else {
             WeatherLocationManager.getLastLocation(this);
@@ -185,6 +190,11 @@ public class HomeActivity extends BaseActivity implements
     @Override
     public void onLocationRetrieved(final Location location) {
         fetchWeatherData(location);
+    }
+
+    @Override
+    public void onConnectionError() {
+
     }
 
     @Override

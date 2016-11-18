@@ -26,7 +26,7 @@ public class WeatherUtils {
     /**
      * Static method to return int matching drawable id, based on @param supplied.
      */
-    public static Drawable getIconId(Context context, final String mIcon){
+    public static Drawable getIconId(Context context, final String mIcon) {
 
         //clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day, or partly-cloudy-night
         int iconId = R.drawable.clear_day;
@@ -71,7 +71,7 @@ public class WeatherUtils {
     /**
      * Format supplied time with timezone supplied using format "9:30 AM"
      */
-    public String getFormattedTime(final String timeZone, final long time){
+    public String getFormattedTime(final String timeZone, final long time) {
 
         SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.ENGLISH);
         formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
@@ -88,8 +88,8 @@ public class WeatherUtils {
     public static Drawable setLayoutBackground(Context context, final String icon) {
 
         Log.e(TAG, "iconName: " + icon);
+        Drawable gradientDrawable = null;
         if (!TextUtils.isEmpty(icon)) {
-            Drawable gradientDrawable = null;
             switch (icon) {
                 case "clear-day":
                     gradientDrawable = ContextCompat.getDrawable(context, R.drawable.bg_gradient_clear_day);
@@ -110,19 +110,22 @@ public class WeatherUtils {
                 case "rain":
                     gradientDrawable = ContextCompat.getDrawable(context, R.drawable.bg_gradient_light_rain);
                     break;
+                case "snow":
+                    gradientDrawable = ContextCompat.getDrawable(context, R.drawable.ic_snow);
+                    break;
+
             }
 
-
-            return gradientDrawable;
         }
-        return null;
+
+        return gradientDrawable;
     }
 
     public static int setLayoutBackgroundResource(final String icon) {
 
         Log.e(TAG, "iconName: " + icon);
+        int gradientDrawable = 0;
         if (!TextUtils.isEmpty(icon)) {
-            int gradientDrawable = 0;
             switch (icon) {
                 case "clear-day":
                     gradientDrawable = R.drawable.bg_gradient_clear_day;
@@ -146,26 +149,45 @@ public class WeatherUtils {
             }
 
 
-            return gradientDrawable;
         }
-        return 0;
+        return gradientDrawable;
     }
 
     /**
      * Static method to return integer values @param supplied
+     *
      * @param temp temperature to be rounded up
      * @return int value.
      */
-    public static String getTemperature(final double temp){
-        return String.format("%s", (int) Math.round(temp));
+    public static String getTemperature(final double temp) {
+        return String.format("%s %s", (int) Math.round(temp), "°F");
     }
 
     /**
      * Static method to return integer values @param supplied
+     *
      * @param precipChance temperature to be rounded up
      * @return int value.
      */
-    public static int getPrecipProbability(final double precipChance){
-        return (int) Math.round(precipChance * 100);
+    public static String getPrecipProbability(final double precipChance) {
+        return String.format ("%s %s", (int) Math.round(precipChance * 100), "%");
+    }
+
+    /**
+     * Method to return day of week from long time provided
+     *
+     * @param time time in milliseconds to be converted.
+     * @return String time for @param time supplied (in format "MON", "TUE", etc)
+     */
+    public static String getDayFromDailyWeatherTime(long time) {
+        String result = "";
+        if (time != 0) {
+            final Date date = new Date(time * 1000);
+            SimpleDateFormat format = new SimpleDateFormat("EEE", Locale.US);
+            result = format.format(date);
+        }
+
+        Logger.i(TAG, "Day of the week " + result);
+        return result;
     }
 }

@@ -19,16 +19,16 @@ public class CurrentWeather implements Serializable {
     private String icon;
 
     @SerializedName("nearestStormDistance")
-    private int nearestStormDistance;
+    private double nearestStormDistance;
 
     @SerializedName("nearestStormBearing")
     private int nearestStormBearing;
 
     @SerializedName("precipIntensity")
-    private int precipIntensity;
+    private double precipIntensity;
 
     @SerializedName("precipProbability")
-    private int precipProbability;
+    private double precipProbability;
 
     @SerializedName("temperature")
     private double temperature;
@@ -105,14 +105,14 @@ public class CurrentWeather implements Serializable {
     /**
      * @return The nearestStormDistance
      */
-    public int getNearestStormDistance() {
+    public double getNearestStormDistance() {
         return nearestStormDistance;
     }
 
     /**
      * @param nearestStormDistance The nearestStormDistance
      */
-    public void setNearestStormDistance(int nearestStormDistance) {
+    public void setNearestStormDistance(double nearestStormDistance) {
         this.nearestStormDistance = nearestStormDistance;
     }
 
@@ -133,28 +133,28 @@ public class CurrentWeather implements Serializable {
     /**
      * @return The precipIntensity
      */
-    public int getPrecipIntensity() {
+    public double getPrecipIntensity() {
         return precipIntensity;
     }
 
     /**
      * @param precipIntensity The precipIntensity
      */
-    public void setPrecipIntensity(int precipIntensity) {
+    public void setPrecipIntensity(double precipIntensity) {
         this.precipIntensity = precipIntensity;
     }
 
     /**
      * @return The precipProbability
      */
-    public int getPrecipProbability() {
+    public double getPrecipProbability() {
         return precipProbability;
     }
 
     /**
      * @param precipProbability The precipProbability
      */
-    public void setPrecipProbability(int precipProbability) {
+    public void setPrecipProbability(double precipProbability) {
         this.precipProbability = precipProbability;
     }
 

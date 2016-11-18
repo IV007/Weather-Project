@@ -1,6 +1,7 @@
 package com.neek.tech.weatherapp.weatherama.ui.fragments;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -74,10 +75,9 @@ public class HourlyConditionsFragment extends BaseFragment implements HomeActivi
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-
-        if (getActivity() instanceof HomeActivity) {
+    public void onDestroy() {
+        super.onDestroy();
+        if (getActivity() instanceof HomeActivity){
             ((HomeActivity) getActivity()).removeListener(this);
         }
     }
@@ -101,18 +101,29 @@ public class HourlyConditionsFragment extends BaseFragment implements HomeActivi
 
     private void displayHourlyWeather(final HourlyWeather hourlyWeather) {
         //TODO - Show hourly weather
+
         Log.i(TAG, "Hourly weather " + hourlyWeather.toString());
+
         if (mHourlyAdapter == null) {
             mHourlyAdapter = new HourlyAdapter(hourlyWeather.getData(), getActivity());
+        } else {
+            if (hourlyWeather.getData() != null && hourlyWeather.getData().size() > 0)
+                mHourlyAdapter.setNewHourlyData(hourlyWeather.getData());
         }
 
         if (mListView != null) {
             mListView.setAdapter(mHourlyAdapter);
             if (!TextUtils.isEmpty(hourlyWeather.getIcon())) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    mListView.setBackground(WeatherUtils.setLayoutBackground(getActivity(), hourlyWeather.getIcon()));
+                    final Drawable drawable = WeatherUtils.setLayoutBackground(getActivity(), hourlyWeather.getIcon());
+                    if (drawable != null) {
+                        mListView.setBackground(drawable);
+                    }
                 } else {
-                    mListView.setBackgroundResource(WeatherUtils.setLayoutBackgroundResource(hourlyWeather.getIcon()));
+                    final int drawableId = WeatherUtils.setLayoutBackgroundResource(hourlyWeather.getIcon());
+                    if (drawableId != 0) {
+                        mListView.setBackgroundResource(drawableId);
+                    }
                 }
             }
         }
@@ -128,12 +139,15 @@ public class HourlyConditionsFragment extends BaseFragment implements HomeActivi
             mContext = context;
         }
 
+        public void setNewHourlyData(ArrayList<HourlyWeather.HourlyData> newHourlyData){
+            if (newHourlyData != this.mHourlyDatas){
+                this.mHourlyDatas = newHourlyData;
+            }
+        }
+
         @Override
         public int getCount() {
-            if (mHourlyDatas != null) {
-                return mHourlyDatas.size();
-            }
-            return 0;
+            return (mHourlyDatas != null) ? mHourlyDatas.size() : 0;
         }
 
 

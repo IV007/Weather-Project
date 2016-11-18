@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.ui.activities.RuntimePermissionActivity;
+import com.neek.tech.weatherapp.weatherama.utilities.LocationUtils;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 import com.neek.tech.weatherapp.weatherama.utilities.WeatherErrorDialog;
 import com.neek.tech.weatherapp.weatherama.utilities.WeatheramaPreferences;
@@ -43,6 +44,13 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         initializeProgressIndicator();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!LocationUtils.isLocationServicesEnabled(this))
+            showGpsDisabledDialog();
+
+    }
 
     /**
      * Initialize progress indicator
@@ -61,7 +69,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         progressIndicator = from.inflate(R.layout.view_progress_indicator, null);
         progressIndicator.setVisibility(visibility);
         addContentView(progressIndicator, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
 
     }
 

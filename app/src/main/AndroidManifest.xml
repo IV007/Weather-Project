@@ -16,8 +16,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!--Goe-location debug API_KEY-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBd7T-1KNYR-KeqgOTT41J7Bxyji5NdvnU"
+            />
+
         <activity
-            android:name=".weatherama.ui.activities.HomeActivity"
+            android:name="com.neek.tech.weatherapp.weatherama.ui.activities.HomeActivity"
             android:launchMode="singleTask"
             android:screenOrientation="nosensor"
             >

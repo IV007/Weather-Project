@@ -1,8 +1,11 @@
 package com.neek.tech.weatherapp.weatherama.ui.fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -18,11 +21,22 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 import com.neek.tech.permissions.runtime_permission.PermissionConstants;
 import com.neek.tech.permissions.runtime_permission.PermissionUtils;
 import com.neek.tech.weatherapp.R;
+import com.neek.tech.weatherapp.weatherama.WeatherLocationManager;
+import com.neek.tech.weatherapp.weatherama.base.BaseActivity;
 import com.neek.tech.weatherapp.weatherama.base.BaseFragment;
 import com.neek.tech.weatherapp.weatherama.controllers.WeatherController;
+import com.neek.tech.weatherapp.weatherama.model.weather.ReverseGeocodeAddress;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 import com.neek.tech.weatherapp.weatherama.utilities.WeatheramaDialog;
 
@@ -32,19 +46,31 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Settings fragment
  */
 public class SettingsFragment extends BaseFragment implements
-        PermissionUtils.PermissionListener {
+        PermissionUtils.PermissionListener,
+        WeatherLocationManager.LocationUpdater {
 
     private static final String TAG = SettingsFragment.class.getSimpleName();
+    private static final int PLACE_PICKER_REQUEST = 1;
+    private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 2;
 
     @BindView(R.id.enableLocationButton)
-    Button mEnableLocationButton;
+    protected Button mEnableLocationButton;
 
     @BindView(R.id.listView)
-    ListView mListView;
+    protected ListView mListView;
+
+    @BindView(R.id.useMyLocationButton)
+    protected TextView mUseMyLocationButton;
+
+    @BindView(R.id.enterAddressTextView)
+    protected TextView mEnterAddressButton;
 
     private List<String> mAddressList;
 
@@ -53,6 +79,8 @@ public class SettingsFragment extends BaseFragment implements
     private String mSelectedAddress;
 
     private SparseBooleanArray mCheckedItems;
+
+    private boolean mGoogleAPIClientFailed = false;
 
 
     public static SettingsFragment newInstance() {
@@ -63,6 +91,10 @@ public class SettingsFragment extends BaseFragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Logger.create(TAG);
+        refreshAddressList();
+    }
+
+    private void refreshAddressList() {
         mAddressList = WeatherController.getSavedUserLocations(getActivity());
     }
 
@@ -77,17 +109,30 @@ public class SettingsFragment extends BaseFragment implements
         setLocationButtonState();
 
         initializeAdapter();
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        mSelectedAddress = WeatherController.getSelectedAddress(getActivity());
+        connect();
+        getSelectedAddress();
         Logger.i(TAG, "Selected address " + mSelectedAddress);
         setLocationButtonState();
         initializeAdapter();
+
+    }
+
+    private void getSelectedAddress() {
+        mSelectedAddress = WeatherController.getSelectedAddress(getActivity());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (WeatherLocationManager.isLocationServicesConnected()) {
+            WeatherLocationManager.disconnect();
+        }
 
     }
 
@@ -96,24 +141,144 @@ public class SettingsFragment extends BaseFragment implements
         PermissionUtils.with(this).requestPermission(PermissionConstants.LOCATION_PERMISSION);
     }
 
+    @OnClick(value = R.id.enterAddressTextView)
+    public void onEnterAddressClicked() {
+        launchAutoCompletePicker();
+    }
+
+    @OnClick(value = R.id.useMyLocationButton)
+    public void onUseMyLocationClicked() {
+        launchPlacesPicker();
+    }
+
+    private void connect() {
+        if (!WeatherLocationManager.isLocationServicesConnected()) {
+            WeatherLocationManager.setLocationUpdater(this);
+            WeatherLocationManager.buildGoogleApiForGpsOrPlaces(getActivity(), true);
+        }
+    }
+
+    private void launchPlacesPicker() {
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        try {
+            startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void launchAutoCompletePicker() {
+        try {
+            AutocompleteFilter filter = new AutocompleteFilter.Builder()
+                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_REGIONS)
+                    .build();
+
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            .setFilter(filter)
+                            .build(getActivity());
+            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            // TODO: Handle the error.
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // TODO: Handle the error.
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(getActivity(), data);
+                if (place != null) {
+                    String address = (String) place.getAddress();
+                    String name = (String) place.getName();
+                    LatLng latLng = place.getLatLng();
+                    double lat = latLng.latitude;
+                    double lon = latLng.longitude;
+
+                    buildAndUpdateAddressList(address, name, lat, lon);
+
+                }
+            }
+        } else if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                if (place != null) {
+                    String address = (String) place.getAddress();
+                    String name = (String) place.getName();
+                    LatLng latLng = place.getLatLng();
+                    double lat = latLng.latitude;
+                    double lon = latLng.longitude;
+
+                    buildAndUpdateAddressList(address, name, lat, lon);
+
+                }
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                // TODO: Handle the error.
+                Logger.i(TAG, status.getStatusMessage());
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
+    }
+
+    private void buildAndUpdateAddressList(String address, String name, double lat, double lon) {
+        ReverseGeocodeAddress userAddress;
+        userAddress = new ReverseGeocodeAddress();
+        userAddress.setKey(address);
+        userAddress.setPlaceName(name);
+        userAddress.setLatitude(lat);
+        userAddress.setLongitude(lon);
+
+        if(WeatherController.saveAddressToPrefs(getActivity(), null, null, userAddress)){
+            refreshAddressList();
+            refreshAdapter(true);
+
+            mEnterAddressButton.setText(address);
+            mEnterAddressButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.black));
+        }
+
+        Logger.i(TAG, "Name " + name);
+        Logger.i(TAG, "Address " + address);
+        Logger.i(TAG, "Latitude " + lat);
+        Logger.i(TAG, "Longitude " + lon);
+    }
+
     private void setLocationButtonState() {
-        if (!PermissionUtils.hasPermission(getActivity(), PermissionConstants.LOCATION_PERMISSION) &&
-                PermissionUtils.isAndroidOSMarshmallowOrAbove()) {
-
-            if (mEnableLocationButton != null && mEnableLocationButton.getVisibility() == View.GONE) {
-                Animation fadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
-                mEnableLocationButton.setVisibility(View.VISIBLE);
-                mEnableLocationButton.startAnimation(fadeIn);
-
-            }
-
+        if (!PermissionUtils.isAndroidOSMarshmallowOrAbove()) {
+            hideEnableLocationButton();
         } else {
+            if (!PermissionUtils.hasPermission(getActivity(), PermissionConstants.LOCATION_PERMISSION)) {
+                showEnableLocationButton();
+            } else {
+                hideEnableLocationButton();
 
-            if (mEnableLocationButton != null && mEnableLocationButton.getVisibility() == View.VISIBLE) {
-                Animation fadeOut = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out);
-                mEnableLocationButton.startAnimation(fadeOut);
-                mEnableLocationButton.setVisibility(View.GONE);
             }
+        }
+    }
+
+    private void showEnableLocationButton() {
+        if (mEnableLocationButton != null && mEnableLocationButton.getVisibility() == View.GONE) {
+            Animation fadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
+            mEnableLocationButton.setVisibility(View.VISIBLE);
+            mEnableLocationButton.startAnimation(fadeIn);
+
+        }
+    }
+
+    private void hideEnableLocationButton() {
+        if (mEnableLocationButton != null && mEnableLocationButton.getVisibility() == View.VISIBLE) {
+            Animation fadeOut = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out);
+            mEnableLocationButton.startAnimation(fadeOut);
+            mEnableLocationButton.setVisibility(View.GONE);
         }
     }
 
@@ -126,10 +291,15 @@ public class SettingsFragment extends BaseFragment implements
         mListView.setAdapter(mAdapter);
     }
 
-    private void refreshAdapter() {
-        mSelectedAddress = WeatherController.getSelectedAddress(getActivity());
-        Logger.i(TAG, "mSelectedAddress " + mSelectedAddress);
+    private void refreshAdapter(boolean refreshData) {
+        getSelectedAddress();
+
+
         if (mAdapter != null) {
+            if (refreshData){
+                mAdapter.setNewAddress(mAddressList);
+            }
+
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -155,6 +325,26 @@ public class SettingsFragment extends BaseFragment implements
         PermissionUtils.with(this).continueRequest();
     }
 
+    @Override
+    public void onLocationRetrieved(Location location) {
+        if (getActivity() instanceof BaseActivity) {
+            ((BaseActivity) getActivity()).hideProgressDialog();
+        }
+
+        if (mGoogleAPIClientFailed) {
+            mGoogleAPIClientFailed = false;
+            connect();
+        }
+    }
+
+    @Override
+    public void onConnectionError() {
+        mGoogleAPIClientFailed = true;
+        if (getActivity() instanceof BaseActivity) {
+            ((BaseActivity) getActivity()).hideProgressDialog();
+        }
+    }
+
     class SettingsAdapter extends BaseAdapter {
 
         private List<String> addresses;
@@ -166,6 +356,12 @@ public class SettingsFragment extends BaseFragment implements
             this.mContext = context;
             this.addresses = addresses;
             mCheckedItems = new SparseBooleanArray();
+        }
+
+        public void setNewAddress(List<String> newAddress){
+            if (newAddress != addresses){
+                this.addresses = newAddress;
+            }
         }
 
         @Override
@@ -220,7 +416,6 @@ public class SettingsFragment extends BaseFragment implements
 
                             } else {
                                 showRemoveAddressConfirmationDialog(mContext, position);
-
                             }
                         }
                     });
@@ -276,7 +471,7 @@ public class SettingsFragment extends BaseFragment implements
                             //Do nothing
                             updateBooleanArray(position, false);
                         }
-                        refreshAdapter();
+                        refreshAdapter(false);
 
                     }
                 });
@@ -284,6 +479,9 @@ public class SettingsFragment extends BaseFragment implements
         dialog.show(getFragmentManager(), WeatheramaDialog.TAG);
     }
 
+    private void showLocationServicesDisabledDialog() {
+//        WeatheramaDialog dialog = WeatheramaDialog.newInstance(getString(R.string.location_permission_required_title), )
+    }
 
     private void showRemoveAddressConfirmationDialog(final Context context, final int position) {
         WeatheramaDialog dialog = WeatheramaDialog.newInstance(null, getString(R.string.remove_address_message),
@@ -304,7 +502,7 @@ public class SettingsFragment extends BaseFragment implements
                             //Do nothing
                             updateBooleanArray(position, true);
                         }
-                        refreshAdapter();
+                        refreshAdapter(false);
 
 
                     }
@@ -313,17 +511,24 @@ public class SettingsFragment extends BaseFragment implements
         dialog.show(getFragmentManager(), WeatheramaDialog.TAG);
     }
 
+    /**
+     * Method to map address checked state to list view position.
+     */
     private void updateBooleanArray(int position, boolean enable) {
         if (mCheckedItems != null) {
             Logger.i(TAG, "Position - " + position + ", enable - " + enable);
             if (mCheckedItems.size() == 0) {
+                //mCheckedItems is empty
                 mCheckedItems.put(position, enable);
             } else if (mCheckedItems.size() > 0) {
+                //mCheckedItems has items, loop through
                 for (int i = 0; i < mCheckedItems.size(); i++) {
+                    //reset all values currently in mCheckedItems
                     if (mCheckedItems.keyAt(i) != position) {
                         mCheckedItems.put(i, false);
                     }
                 }
+                //finally put the position in mCheckedItems
                 mCheckedItems.put(position, enable);
 
             }

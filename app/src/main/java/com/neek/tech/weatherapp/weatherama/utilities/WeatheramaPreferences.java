@@ -3,6 +3,7 @@ package com.neek.tech.weatherapp.weatherama.utilities;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 /**
  * Created by ivanutsalo on 11/10/16.
@@ -18,6 +19,7 @@ public class WeatheramaPreferences {
     private static final String SAVE_USER_LOCATIONS = "SaveUserLocations";
     private static final String GEOCODE_ADDRESSES = "GEOCODE_ADDRESSES";
     private static final String SELECTED_ADDRESS = "SELECTED_ADDRESS";
+    private static final String USER_ENABLED_SELECTED_ADDRESS = "USER_ENABLED_SELECTED_ADDRESS";
 
 
     public static SharedPreferences getSharedPreferences(Context context) {
@@ -76,10 +78,20 @@ public class WeatheramaPreferences {
         return getSharedPreferences(context).getString(GEOCODE_ADDRESSES, null);
     }
     public static boolean saveSelectedAddress(Context context, String address){
+        if (!TextUtils.isEmpty(address)){
+            editSharedPreferences(context).putBoolean(USER_ENABLED_SELECTED_ADDRESS, true).commit();
+        } else {
+            editSharedPreferences(context).putBoolean(USER_ENABLED_SELECTED_ADDRESS, false).commit();
+        }
+
         return editSharedPreferences(context).putString(SELECTED_ADDRESS, address).commit();
     }
 
     public static String getSelectedAddress(Context context){
         return getSharedPreferences(context).getString(SELECTED_ADDRESS, null);
+    }
+
+    public static boolean didUserEnableSelectedAddress(Context context){
+        return getSharedPreferences(context).getBoolean(USER_ENABLED_SELECTED_ADDRESS, false);
     }
 }

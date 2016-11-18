@@ -17,6 +17,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Places;
 import com.neek.tech.permissions.runtime_permission.PermissionConstants;
 import com.neek.tech.permissions.runtime_permission.PermissionUtils;
 import com.neek.tech.weatherapp.weatherama.controllers.WeatherController;
@@ -51,8 +52,7 @@ public class WeatherLocationManager implements
 
     private static boolean mConnected;
     private static GoogleApiClient mLocationClient;
-    private static AddressResultReceiver mResultReceiver;
-
+    private static boolean mUsePlacesAPI = false;
 
     private WeatherLocationManager() {
         Logger.d(TAG, "Initialized");
@@ -64,7 +64,7 @@ public class WeatherLocationManager implements
         singleton = new WeatherLocationManager();
         AddressResultReceiver.initialize();
         AddressResultReceiver.setListener(singleton);
-        buildGoogleApiClient(context);
+        buildGoogleApiClient(context, false);
 
     }
 
@@ -91,6 +91,7 @@ public class WeatherLocationManager implements
             Log.i(TAG, "disconnect");
             mLocationClient.disconnect();
             mConnected = false;
+            mUsePlacesAPI = false;
         }
     }
 
@@ -109,14 +110,20 @@ public class WeatherLocationManager implements
         if (mConnected && mLocationClient != null &&
                 PermissionUtils.hasPermission(context, PermissionConstants.LOCATION_PERMISSION)) {
             Location location = null;
-            if (PermissionChecker.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    && PermissionChecker.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (PermissionChecker.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED
+                    && PermissionChecker.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
 
                 location = LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
+
             } else if (!PermissionUtils.isAndroidOSMarshmallowOrAbove()) {
+
                 location = LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
+
             }
-            if (mLocationUpdater != null) {
+
+            if (mLocationUpdater != null && location != null) {
                 mLocationUpdater.onLocationRetrieved(location);
             }
 
@@ -151,32 +158,40 @@ public class WeatherLocationManager implements
     @Override
     public void onConnectionFailed(ConnectionResult failure) {
         mConnected = false;
-
+        if (mLocationUpdater != null) {
+            mLocationUpdater.onConnectionError();
+        }
     }
 
     @Override
     public void onConnected(Bundle arg0) {
         mConnected = true;
-        Location currentLocation = null;
-        if (PermissionUtils.isAndroidOSMarshmallowOrAbove()) {
-            if (PermissionUtils.hasPermission(mContext, PermissionConstants.LOCATION_PERMISSION)) {
+        if (!mUsePlacesAPI) {
+            Location currentLocation = null;
+            if (PermissionUtils.isAndroidOSMarshmallowOrAbove()) {
+                if (PermissionUtils.hasPermission(singleton.mContext, PermissionConstants.LOCATION_PERMISSION)) {
+                    currentLocation = LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
+
+                    if (mLocationUpdater != null) {
+                        mLocationUpdater.onLocationRetrieved(currentLocation);
+                    }
+                }
+            } else {
                 currentLocation = LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
 
                 if (mLocationUpdater != null) {
                     mLocationUpdater.onLocationRetrieved(currentLocation);
                 }
             }
-        } else {
-            currentLocation = LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
 
-            if (mLocationUpdater != null) {
-                mLocationUpdater.onLocationRetrieved(currentLocation);
+            if (!WeatherController.addressExistsAlready(singleton.mContext, currentLocation) &&
+                    WeatheramaPreferences.isSaveUserLocationEnabledByDefault(singleton.mContext)) {
+                startIntentService(currentLocation);
             }
-        }
-
-        if (!WeatherController.addressExistsAlready(singleton.mContext, currentLocation) &&
-                WeatheramaPreferences.isSaveUserLocationEnabledByDefault(singleton.mContext)) {
-            startIntentService(currentLocation);
+        } else {
+            if (mLocationUpdater != null) {
+                mLocationUpdater.onLocationRetrieved(null);
+            }
         }
     }
 
@@ -188,19 +203,38 @@ public class WeatherLocationManager implements
         }
     }
 
-    protected static synchronized void buildGoogleApiClient(Context context) {
+    public static void buildGoogleApiForGpsOrPlaces(Context context, boolean usePlacesApi){
+        if (mLocationClient != null){
+            mLocationClient.disconnect();
+            mLocationClient = null;
+        }
+        mUsePlacesAPI = usePlacesApi;
+        buildGoogleApiClient(context, usePlacesApi);
+    }
+
+    private static synchronized void buildGoogleApiClient(Context context, boolean usePlacesApi) {
         if (context == null)
             return;
 
         if (mLocationClient == null &&
                 GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS) {
-            mLocationClient = new GoogleApiClient.Builder(context)
-                    .addConnectionCallbacks(singleton)
-                    .addOnConnectionFailedListener(singleton)
-                    .addApi(LocationServices.API)
-                    .build();
+            if (!usePlacesApi) {
+                mLocationClient = new GoogleApiClient.Builder(context)
+                        .addConnectionCallbacks(singleton)
+                        .addOnConnectionFailedListener(singleton)
+                        .addApi(LocationServices.API)
+                        .build();
+            } else {
+
+                mLocationClient = new GoogleApiClient.Builder(context)
+                        .addOnConnectionFailedListener(singleton)
+                        .addApi(Places.PLACE_DETECTION_API)
+                        .addApi(Places.GEO_DATA_API)
+                        .build();
+            }
         }
     }
+
 
 
     public static void getLastKnownLocation() {
@@ -231,7 +265,7 @@ public class WeatherLocationManager implements
     @Override
     public void onAddressRetrievalSuccess(final String address, final Location location) {
 
-        WeatherController.saveAddressToPrefs(singleton.mContext, address, location);
+        WeatherController.saveAddressToPrefs(singleton.mContext, address, location, null);
 
     }
 
@@ -263,6 +297,8 @@ public class WeatherLocationManager implements
     public interface LocationUpdater {
 
         void onLocationRetrieved(final Location location);
+
+        void onConnectionError();
     }
 
     public static boolean isPollingTimeExpired() {

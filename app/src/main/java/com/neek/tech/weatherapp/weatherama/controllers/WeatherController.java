@@ -66,15 +66,17 @@ public class WeatherController implements WeatherUpdater {
     }
 
     public void fetchWeatherData(final ReverseGeocodeAddress address) {
-        String url = Constants.FORECAST_URL
-                .replace("[latitude]", Double.toString(address.getLatitude()))
-                .replace("[longitude]", Double.toString(address.getLongitude()));
+        if (address != null) {
+            String url = Constants.FORECAST_URL
+                    .replace("[latitude]", Double.toString(address.getLatitude()))
+                    .replace("[longitude]", Double.toString(address.getLongitude()));
 
-        Logger.i(TAG, "Location - " + address.getKey());
-        Log.e(TAG, "url - " + url);
-        WeatherService.getInstance();
-        WeatherService.setWeatherUpdater(this);
-        WeatherService.getWeatherData(url);
+            Logger.i(TAG, "ReverseGeocodeAddress - " + address.getKey());
+            Log.e(TAG, "url - " + url);
+            WeatherService.getInstance();
+            WeatherService.setWeatherUpdater(this);
+            WeatherService.getWeatherData(url);
+        }
 
     }
 
@@ -94,12 +96,13 @@ public class WeatherController implements WeatherUpdater {
 
     /**
      * Retrieves user location from SharedPrefs.
-     * If address is selected from settings, compare with that address
-     * otherwise get the most recent address.
+     * If address is selected from settings,
+     * compare with that address otherwise get the most recent address.
      */
     public static ReverseGeocodeAddress getUserLocationFromPrefs(Context context) {
         ReverseGeocodeAddress result = null;
 
+        singleton.mSelectedAddress = WeatheramaPreferences.getSelectedAddress(context);
         final String prevAddresses = WeatheramaPreferences.getGeocodedAddressList(context);
         List<ReverseGeocodeAddress> mappedAddress;
 
@@ -116,11 +119,9 @@ public class WeatherController implements WeatherUpdater {
 
                     ReverseGeocodeAddress address = mappedAddress.get(i);
 
-                    Logger.i(TAG, "Address set - " + singleton.mSelectedAddress);
 
-                    if (TextUtils.isEmpty(singleton.mSelectedAddress)) {
-                        result = address;
-                    } else if (address.getKey().equalsIgnoreCase(singleton.mSelectedAddress)) {
+                    if (address.getKey().equalsIgnoreCase(singleton.mSelectedAddress)) {
+                        Logger.i(TAG, "Address set - " + singleton.mSelectedAddress);
                         result = address;
                         break;
                     }
@@ -134,6 +135,7 @@ public class WeatherController implements WeatherUpdater {
 
     /**
      * Method to return a list of previously saved user locations
+     *
      * @return List of addresses reordered with most recent first.
      */
     public static List<String> getSavedUserLocations(Context context) {
@@ -152,7 +154,7 @@ public class WeatherController implements WeatherUpdater {
 
                 for (int i = mappedAddress.size() - 1; i >= 0; i--) {
                     ReverseGeocodeAddress address = mappedAddress.get(i);
-                    if (result == null){
+                    if (result == null) {
                         result = new ArrayList<>();
                     }
 
@@ -198,10 +200,15 @@ public class WeatherController implements WeatherUpdater {
     }
 
     /**
-     * Saves address to SharedPrefs after reverse geocoding is complete.
+     * Method to Save address to SharedPrefs after reverse geocoding is complete.
+     *
+     * @param context     context required by shared prefs
+     * @param address     String address after reverse geocode
+     * @param location    Location object for retrieving LatLng
+     * @param userAddress ReverseGeocodeAddress
      */
-    public static boolean saveAddressToPrefs(Context context, String address, Location location) {
-        boolean result = false;
+    public static boolean saveAddressToPrefs(Context context, String address, Location location, ReverseGeocodeAddress userAddress) {
+        boolean result;
         Map<String, ReverseGeocodeAddress> locationMap = new LinkedHashMap<>();
         String prevAddresses = WeatheramaPreferences.getGeocodedAddressList(context);
         final ReverseGeocodeAddress geocodeAddress;
@@ -218,11 +225,17 @@ public class WeatherController implements WeatherUpdater {
                 }
             }
 
-            geocodeAddress = new ReverseGeocodeAddress();
-            geocodeAddress.setKey(address);
-            geocodeAddress.setLatitude(location.getLatitude());
-            geocodeAddress.setLongitude(location.getLongitude());
-            locationMap.put(address, geocodeAddress);
+            if (!TextUtils.isEmpty(address) && location != null) {
+                geocodeAddress = new ReverseGeocodeAddress();
+                geocodeAddress.setKey(address);
+                geocodeAddress.setLatitude(location.getLatitude());
+                geocodeAddress.setLongitude(location.getLongitude());
+                locationMap.put(address, geocodeAddress);
+            }
+
+            if (userAddress != null) {
+                locationMap.put(userAddress.getKey(), userAddress);
+            }
 
             mappedAddress = new ArrayList<>(locationMap.values());
             String json = Json.toJson(mappedAddress);
@@ -240,12 +253,16 @@ public class WeatherController implements WeatherUpdater {
                 geocodeAddress.setLongitude(location.getLongitude());
                 locationMap.put(address, geocodeAddress);
 
-                mappedAddress = new ArrayList<>(locationMap.values());
-                String json = Json.toJson(mappedAddress);
-                result = WeatheramaPreferences.saveGeocodedAddressToPrefs(context, json);
-                Logger.i(TAG, "Geocode mSelectedAddress saved to shared prefs = " + result);
-
             }
+
+            if (userAddress != null) {
+                locationMap.put(userAddress.getKey(), userAddress);
+            }
+
+            mappedAddress = new ArrayList<>(locationMap.values());
+            String json = Json.toJson(mappedAddress);
+            result = WeatheramaPreferences.saveGeocodedAddressToPrefs(context, json);
+            Logger.i(TAG, "Geocode mSelectedAddress saved to shared prefs = " + result);
         }
 
         return result;

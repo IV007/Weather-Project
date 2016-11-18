@@ -272,4 +272,13 @@ public class Weather implements Serializable {
     }
 
 
+    @Override
+    public String toString() {
+        return "Weather{" +
+                "latitude=" + latitude + '\n' +
+                ", longitude=" + longitude + '\n' +
+                ", timezone='" + timezone + '\n' +
+                ", offset=" + offset + '\n' +
+                '}';
+    }
 }

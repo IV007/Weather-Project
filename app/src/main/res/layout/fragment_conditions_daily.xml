@@ -1,14 +1,260 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/colorPrimaryLight1"
+    android:orientation="vertical"
+    >
 
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/dailyListCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|start"
+        android:background="@drawable/settings_bg_rounded_corner"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="10dp"
+        card_view:cardPreventCornerOverlap="false"
+        card_view:cardUseCompatPadding="true"
 
-    <TextView
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryLight2"
+            android:orientation="vertical"
+
+            >
+
+            <TextView
+                android:id="@+id/dailySummaryLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_header_rounded_corner"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:maxLines="3"
+                android:padding="@dimen/rounded_corner_radius"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                tools:text="CLoudey with a chance of whatever comes after spaghetti in the belly for 50 hours "
+                />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/dailyRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/dailyDetailsCardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Daily 1,2,3"
-        />
+        android:layout_gravity="center_vertical|start"
+        android:background="@drawable/settings_bg_rounded_corner"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="10dp"
+        card_view:cardPreventCornerOverlap="false"
+        card_view:cardUseCompatPadding="true"
+
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/dailyDetailsSummaryLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_header_rounded_corner"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:maxLines="2"
+                android:padding="@dimen/rounded_corner_radius"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                tools:text="Partly cloudy starting in the evening dwoj gowjgo gwojowg owgj."
+                />
+
+        <RelativeLayout
+            android:id="@+id/dailyDetailsRootLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryLight2"
+            >
+
+            <ImageView
+                android:id="@+id/backgroundImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                />
+
+            <TextView
+                android:id="@+id/hiTempLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="90"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:visibility="visible"
+                android:gravity="center"
+                android:layout_below="@+id/hiTempText"
+                android:layout_alignLeft="@+id/hiTempText"
+                android:layout_alignRight="@+id/hiTempText"
+                android:layout_alignEnd="@+id/hiTempText"
+                android:layout_alignStart="@+id/hiTempText"
+                android:padding="@dimen/rounded_corner_radius"
+
+                />
+
+
+            <TextView
+                android:id="@+id/loTempText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="63dp"
+                android:layout_marginStart="63dp"
+                android:text="Lo-Temp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:visibility="visible"
+                android:layout_alignBaseline="@+id/hiTempText"
+                android:layout_alignBottom="@+id/hiTempText"
+                android:layout_toRightOf="@+id/hiTempText"
+                android:layout_toEndOf="@+id/hiTempText"/>
+
+            <TextView
+                android:id="@+id/loTempLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/loTempText"
+                android:layout_alignLeft="@+id/loTempText"
+                android:layout_alignRight="@+id/loTempText"
+                android:layout_alignStart="@+id/loTempText"
+                android:layout_below="@+id/loTempText"
+                android:gravity="center"
+                android:padding="@dimen/rounded_corner_radius"
+                tools:text="90"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:visibility="visible"
+
+                />
+
+
+            <TextView
+                android:id="@+id/rainLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="90"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:visibility="visible"
+                android:gravity="center"
+                android:layout_below="@+id/rainText"
+                android:layout_alignLeft="@+id/rainText"
+                android:layout_alignRight="@+id/rainText"
+                android:layout_alignEnd="@+id/rainText"
+                android:layout_alignStart="@+id/rainText"
+                android:padding="@dimen/rounded_corner_radius"
+
+                />
+
+            <TextView
+                android:id="@+id/rainText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rain?"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:visibility="visible"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:layout_below="@+id/hiTempLabel"
+                android:layout_alignLeft="@+id/hiTempLabel"
+                android:layout_alignStart="@+id/hiTempLabel"
+                android:layout_alignRight="@+id/hiTempLabel"
+                android:layout_alignEnd="@+id/hiTempLabel"/>
+
+            <TextView
+                android:id="@+id/hiTempText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hi-Temp"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:visibility="visible"
+                android:layout_marginLeft="28dp"
+                android:layout_marginStart="28dp"
+                android:layout_below="@+id/dailyDetailsSummaryLabel"
+                android:layout_toRightOf="@+id/dailyDetailsIcon"
+                android:layout_toEndOf="@+id/dailyDetailsIcon"
+                android:layout_marginTop="33dp"/>
+
+
+            <TextView
+                android:id="@+id/windSpeedLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/windSpeedText"
+                android:layout_alignLeft="@+id/windSpeedText"
+                android:layout_alignRight="@+id/windSpeedText"
+                android:layout_alignStart="@+id/windSpeedText"
+                android:layout_below="@+id/windSpeedText"
+                android:gravity="center"
+                android:padding="@dimen/rounded_corner_radius"
+                tools:text="90"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:visibility="visible"
+
+                />
+
+            <TextView
+                android:id="@+id/windSpeedText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wind Speed"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:visibility="visible"
+                android:layout_alignBaseline="@+id/rainText"
+                android:layout_alignBottom="@+id/rainText"
+                android:layout_alignLeft="@+id/loTempLabel"
+                android:layout_alignStart="@+id/loTempLabel"/>
+
+            <ImageView
+                android:id="@+id/dailyDetailsIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                tools:src="@drawable/partly_cloudy"
+                android:layout_marginLeft="18dp"
+                android:layout_marginStart="18dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+
+        </RelativeLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
 </LinearLayout>

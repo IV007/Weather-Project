@@ -8,29 +8,60 @@
     android:background="@color/colorPrimaryLight1"
     >
 
-
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimaryLight1"
+        android:orientation="vertical"
+        android:layout_margin="10dp"
+
         >
 
         <Button
             android:id="@+id/enableLocationButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:background="@drawable/enable_location_corner"
             android:text="@string/enable_location_permission"
             android:textColor="@color/button_light_green"
-            tools:visibility="visible"
+            tools:visibility="gone"
             android:visibility="gone"
+            android:layout_marginBottom="@dimen/general_padding"
+            />
+
+        <TextView
+            android:id="@+id/enterAddressTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_rounded_corners"
+            android:text="@string/enter_address_to_search"
+            android:textColor="@color/colorPrimaryLight1"
+            android:textSize="16sp"
+            tools:visibility="visible"
+            android:visibility="visible"
+            android:padding="@dimen/general_padding"
+            android:gravity="start|center_vertical"
+            android:layout_marginBottom="@dimen/general_padding"
+            />
+
+        <TextView
+            android:id="@+id/useMyLocationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dialog_accept_button"
+            android:text="@string/use_my_location"
+            android:textColor="@color/button_light_green"
+            android:textSize="16sp"
+            tools:visibility="visible"
+            android:visibility="visible"
+            android:padding="@dimen/margin_between_texts"
+            android:gravity="start|center_vertical"
+            android:drawableStart="@drawable/ic_device_gps"
+            android:drawableLeft="@drawable/ic_device_gps"
+            android:drawablePadding="@dimen/tab_padding"
             />
 
     </LinearLayout>
-
 
     <TextView
         android:id="@+id/previousLocationsTextView"

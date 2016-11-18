@@ -57,4 +57,5 @@ public class SettingsActivity extends BaseActivity {
     protected int getIdRootFragmentContainer() {
         return R.id.container;
     }
+
 }
