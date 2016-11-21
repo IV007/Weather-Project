@@ -1,9 +1,13 @@
 package com.neek.tech.weatherapp.weatherama.ui.fragments;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.base.BaseFragment;
@@ -12,11 +16,9 @@ import com.neek.tech.weatherapp.weatherama.model.weather.Weather;
 import com.neek.tech.weatherapp.weatherama.ui.HomeActivityListener;
 import com.neek.tech.weatherapp.weatherama.ui.activities.HomeActivity;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
+import com.neek.tech.weatherapp.weatherama.utilities.WeatherUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import butterknife.BindView;
 
 /**
  * Created by ivanutsalo on 11/7/16.
@@ -25,135 +27,38 @@ public class CurrentConditionsFragment extends BaseFragment implements HomeActiv
 
     private static final String TAG = CurrentConditionsFragment.class.getSimpleName();
 
-    private String mIcon;
-    private long mTime;
-    private double mTemperature;
-    private double mHumidity;
-    private double mPrecipChance;
-    private String mSummary;
-    private String mTimeZone;
+    @Nullable
+    @BindView(R.id.timeLabel)
+    TextView mTimeLabel;
 
-    public String getIcon() {
-        return mIcon;
-    }
+    @Nullable
+    @BindView(R.id.locationLabel)
+    TextView mLocationiLabel;
 
-    public int getIconId() {
+    @Nullable
+    @BindView(R.id.temperatureLabel)
+    TextView mTemperatureLabel;
 
-        int iconId = R.drawable.clear_day;
+    @Nullable
+    @BindView(R.id.humidityValue)
+    TextView mHumidityValue;
 
-        if(mIcon != null) {
-            switch (mIcon) {
-                case "clear-day":
-                    iconId = R.drawable.clear_day;
-                    break;
-                case "clear-night":
-                    iconId = R.drawable.clear_night;
-                    break;
-                case "rain":
-                    iconId = R.drawable.rain;
-                    break;
-                case "snow":
-                    iconId = R.drawable.snow;
-                    break;
-                case "sleet":
-                    iconId = R.drawable.sleet;
-                    break;
-                case "wind":
-                    iconId = R.drawable.wind;
-                    break;
-                case "fog":
-                    iconId = R.drawable.fog;
-                    break;
-                case "cloudy":
-                    iconId = R.drawable.cloudy;
-                    break;
-                case "partly-cloudy-day":
-                    iconId = R.drawable.partly_cloudy;
-                    break;
-                case "partly-cloudy-night":
-                    iconId = R.drawable.cloudy_night;
-                    break;
-            }
-        }
-        return iconId;
-    }
+    @Nullable
+    @BindView(R.id.precipValue)
+    TextView mPrecipValue;
 
-    public void setIcon(String icon) {
-        mIcon = icon;
-    }
+    @Nullable
+    @BindView(R.id.summaryLabel)
+    TextView mSummaryLabel;
 
-    public long getTime() {
-        return mTime;
-    }
+    @Nullable
+    @BindView(R.id.iconImageView)
+    ImageView mIconImageView;
 
-    public String getFormattedTime(){
-        String timeString = "";
-        if (mTimeZone != null) {
-            SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US);
-            formatter.setTimeZone(TimeZone.getTimeZone(getTimeZone()));
-            Date dateTime = new Date(getTime() * 1000);
-            timeString = formatter.format(dateTime);
-        }
-        return timeString;
-    }
+    @Nullable
+    @BindView(R.id.currentWearherRootLayout)
+    RelativeLayout mCurrentWearherRootLayout;
 
-    public void setTime(long time) {
-        mTime = time;
-    }
-
-    public int getTemperature() {
-        return (int)Math.round(mTemperature);
-    }
-
-    public void setTemperature(double temperature) {
-        mTemperature = temperature;
-    }
-
-    public double getHumidity() {
-        return mHumidity;
-    }
-
-    public void setHumidity(double humidity) {
-        mHumidity = humidity;
-    }
-
-    public double getPrecipChance() {
-        double precipPercentage = mPrecipChance * 100;
-        return (int)Math.round(precipPercentage);
-    }
-
-    public void setPrecipChance(double precipChance) {
-        mPrecipChance = precipChance;
-    }
-
-    public String getSummary() {
-        return mSummary;
-    }
-
-    public void setSummary(String summary) {
-        mSummary = summary;
-    }
-
-    public String getTimeZone() {
-        return mTimeZone;
-    }
-
-    public void setTimeZone(String timeZone) {
-        mTimeZone = timeZone;
-    }
-
-    @Override
-    public String toString() {
-        return "CurrentWeather{" +
-                "mIcon='" + mIcon + '\'' + "\n"+
-                ", mTime=" + mTime + "\n"+
-                ", mTemperature=" + mTemperature + "\n"+
-                ", mHumidity=" + mHumidity + "\n"+
-                ", mPrecipChance=" + mPrecipChance + "\n"+
-                ", mSummary='" + mSummary + '\'' + "\n"+
-                ", mTimeZone='" + mTimeZone + '\'' + "\n"+
-                '}';
-    }
 
     public static CurrentConditionsFragment newInstance(){
         Bundle b = new Bundle();
@@ -199,13 +104,55 @@ public class CurrentConditionsFragment extends BaseFragment implements HomeActiv
     @Override
     public void onWeatherRetrieved(Weather weather) {
         if (weather != null && weather.getCurrentWeather() != null){
-            displayCurrentWeather(weather.getCurrentWeather());
+            displayCurrentWeather(weather.getCurrentWeather(), weather.getTimezone());
         }
     }
 
-    private void displayCurrentWeather(CurrentWeather currentWeather){
+    private void displayCurrentWeather(CurrentWeather currentWeather, String timeZone){
         //TODO - Show current weather.
         Log.i(TAG, "Current weather " + currentWeather.toString());
 
+
+
+
+        if (currentWeather != null) {
+            if (mTemperatureLabel != null) {
+                mTemperatureLabel.setText(WeatherUtils.getTemperature(currentWeather.getTemperature()));
+            }
+            if (mLocationiLabel != null) {
+                mLocationiLabel.setText(timeZone);
+            }
+
+            if (mTimeLabel != null) {
+                mTimeLabel.setText("At " + WeatherUtils.getFormattedTime(timeZone, currentWeather.getTime()) + " it will be");
+            }
+
+            if (mHumidityValue != null) {
+                mHumidityValue.setText(String.format("%s", currentWeather.getHumidity()));
+            }
+
+            if (mPrecipValue != null) {
+                mPrecipValue.setText(String.format("%s %s", WeatherUtils.getPrecipProbability(currentWeather.getPrecipProbability()), "%"));
+            }
+
+            if (mSummaryLabel != null) {
+                mSummaryLabel.setText(currentWeather.getSummary());
+            }
+
+
+            if (mIconImageView != null) {
+                mIconImageView.setImageDrawable(WeatherUtils.getIconId(getActivity(), currentWeather.getIcon()));
+            }
+
+            if (mCurrentWearherRootLayout != null){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    mCurrentWearherRootLayout.setBackground(WeatherUtils.setLayoutBackground(getActivity(), currentWeather.getIcon()));
+                } else {
+                    mCurrentWearherRootLayout.setBackgroundResource(WeatherUtils.setLayoutBackgroundResource(currentWeather.getIcon()));
+                }
+            }
+        }
     }
+
+
 }

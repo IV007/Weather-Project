@@ -156,7 +156,6 @@ public class HourlyConditionsFragment extends BaseFragment implements HomeActivi
             if (mHourlyDatas != null) {
                 return mHourlyDatas.get(position);
             }
-
             return null;
         }
 

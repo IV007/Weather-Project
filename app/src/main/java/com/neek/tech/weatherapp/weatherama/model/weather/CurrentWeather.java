@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class CurrentWeather implements Serializable {
 
     @SerializedName("time")
-    private int time;
+    private long time;
 
     @SerializedName("summary")
     private String summary;
@@ -63,14 +63,14 @@ public class CurrentWeather implements Serializable {
     /**
      * @return The time
      */
-    public int getTime() {
+    public long getTime() {
         return time;
     }
 
     /**
      * @param time The time
      */
-    public void setTime(int time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
