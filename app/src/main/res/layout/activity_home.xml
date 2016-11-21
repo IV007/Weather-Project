@@ -11,6 +11,13 @@
 
     <!--<include layout="@layout/weather_toolbar"/>-->
 
+    <TextView
+        android:id="@+id/error_message_textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="16sp"
+        android:visibility="gone"
+        />
     <LinearLayout
         android:id="@+id/container"
         android:orientation="vertical"
