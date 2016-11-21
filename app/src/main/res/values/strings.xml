@@ -1,4 +1,5 @@
 <resources>
+    <string name="ok">OK</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="remove">Remove</string>
@@ -29,4 +30,15 @@
     <string name="hourly_conditions">Hourly</string>
     <string name="daily_conditions">7-Days</string>
     <string name="previous_locations">Previous Locations</string>
+
+
+    <!--Play services error-->
+    <string name="play_services_outdated_title">Google Play Store Update Required</string>
+    <string name="play_services_unavailable_title">Google Play Store Unavailable!</string>
+    <string name="play_services_outdated_message">Oops! \nYou\'re using an outdated version of Google Play Store, please update to use this feature.</string>
+    <string name="play_services_unavailable_message">Oops! \nGoogle Play Store is not installed on your device. Please install to use this feature.</string>
+
+
+    <!--Empty Data-->
+    <string name="empty_data_message">Couldn\'t retrieve data. \nFor some reason we\'re unable to retrieve your weather data. Please ensure your settings have been configured correctly and re-try.</string>
 </resources>

@@ -29,8 +29,8 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
-import com.neek.tech.permissions.runtime_permission.PermissionConstants;
-import com.neek.tech.permissions.runtime_permission.PermissionUtils;
+import com.neek.tech.suite.permissions.runtime_permission.PermissionConstants;
+import com.neek.tech.suite.permissions.runtime_permission.PermissionUtils;
 import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.WeatherLocationManager;
 import com.neek.tech.weatherapp.weatherama.base.BaseActivity;
@@ -163,8 +163,10 @@ public class SettingsFragment extends BaseFragment implements
         try {
             startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
         } catch (GooglePlayServicesRepairableException e) {
+            showGooglePlayOutdatedDialog();
             e.printStackTrace();
         } catch (GooglePlayServicesNotAvailableException e) {
+            showGooglePlayNotFoundDialog();
             e.printStackTrace();
         }
     }
@@ -183,9 +185,11 @@ public class SettingsFragment extends BaseFragment implements
                             .build(getActivity());
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
         } catch (GooglePlayServicesRepairableException e) {
-            // TODO: Handle the error.
+            showGooglePlayOutdatedDialog();
+            e.printStackTrace();
         } catch (GooglePlayServicesNotAvailableException e) {
-            // TODO: Handle the error.
+            showGooglePlayNotFoundDialog();
+            e.printStackTrace();
         }
     }
 
@@ -479,8 +483,34 @@ public class SettingsFragment extends BaseFragment implements
         dialog.show(getFragmentManager(), WeatheramaDialog.TAG);
     }
 
-    private void showLocationServicesDisabledDialog() {
-//        WeatheramaDialog dialog = WeatheramaDialog.newInstance(getString(R.string.location_permission_required_title), )
+    private void showGooglePlayOutdatedDialog() {
+        WeatheramaDialog dialog = WeatheramaDialog.newInstance(getString(R.string.play_services_outdated_title),
+                getString(R.string.play_services_outdated_message), getString(R.string.ok), null,
+                new WeatheramaDialog.DialogClickedButton() {
+                    @Override
+                    public void onClickedButton(WeatheramaDialog dialog, int id, View v) {
+                        if (id == WeatheramaDialog.POSITIVE_BUTTON){
+                            dialog.dismiss();
+                        }
+                    }
+                });
+        dialog.setCancelable(false);
+        dialog.show(getFragmentManager(), WeatheramaDialog.TAG);
+    }
+
+    private void showGooglePlayNotFoundDialog() {
+        WeatheramaDialog dialog = WeatheramaDialog.newInstance(getString(R.string.play_services_unavailable_title),
+                getString(R.string.play_services_unavailable_message), getString(R.string.ok), null,
+                new WeatheramaDialog.DialogClickedButton() {
+                    @Override
+                    public void onClickedButton(WeatheramaDialog dialog, int id, View v) {
+                        if (id == WeatheramaDialog.POSITIVE_BUTTON) {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+        dialog.setCancelable(false);
+        dialog.show(getFragmentManager(), WeatheramaDialog.TAG);
     }
 
     private void showRemoveAddressConfirmationDialog(final Context context, final int position) {
