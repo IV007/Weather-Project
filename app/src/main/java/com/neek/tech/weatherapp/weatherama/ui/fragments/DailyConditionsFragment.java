@@ -15,13 +15,17 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.neek.tech.suite.ui.animations.Rotate3dAnimation;
 import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.ui.SimpleRecyclerViewDividerItem;
 import com.neek.tech.weatherapp.weatherama.base.BaseFragment;
@@ -36,6 +40,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * DailyConditions fragment for displaying weather conditions for
@@ -44,6 +49,10 @@ import butterknife.ButterKnife;
 public class DailyConditionsFragment extends BaseFragment implements HomeActivityListener {
 
     private static final String TAG = DailyConditionsFragment.class.getSimpleName();
+
+    private static final int FRONT_FACE = 0;
+
+    private static final int BACK_FACE = 1;
 
     @BindView(R.id.dailyRecyclerView)
     protected RecyclerView mDailyRecyclerView;
@@ -75,10 +84,23 @@ public class DailyConditionsFragment extends BaseFragment implements HomeActivit
     @BindView(R.id.backgroundImage)
     protected ImageView mBackgroundImage;
 
+    @BindView(R.id.seeMoreButton)
+    protected Button mSeeMoreButton;
 
     private SparseBooleanArray selectedItems;
 
     private DailyConditionsAdapter mDailyConditionsAdapter;
+
+    /**
+     * Position for current detail position.
+     */
+    private int mDetailsPosition = -1;
+
+    /**
+     * The boolean for image
+     */
+    private int currentFace;
+
 
     public static DailyConditionsFragment newInstance() {
         Bundle b = new Bundle();
@@ -129,8 +151,113 @@ public class DailyConditionsFragment extends BaseFragment implements HomeActivit
         }
     }
 
+    @OnClick(value = R.id.seeMoreButton)
+    public void onSeeMoreButtonClicked(){
+        startAnimation();
+    }
+
+    private void startAnimation(){
+
+        if (mBackgroundImage != null) {
+
+            // Find the center of the container
+            final float centerX = mBackgroundImage.getWidth() / 2.0f;
+            final float centerY = mBackgroundImage.getHeight() / 2.0f;
+            final float depthZ = centerX;
+
+            // Create a new 3D rotation with the supplied parameter
+            // The animation listener is used to trigger the next animation
+            final Rotate3dAnimation rotation = new Rotate3dAnimation(0, 90, centerX, centerY, depthZ, true);
+            rotation.setDuration(500);
+            rotation.setFillAfter(true);
+            rotation.setInterpolator(new AccelerateInterpolator());
+            rotation.setAnimationListener(new FirstHalfRotationCompleted());
+
+            mBackgroundImage.startAnimation(rotation);
+
+        }
+    }
+
+    /**
+     * Setup a new 3D rotation on the container view.
+     */
+    private void startSecondHalfRotation() {
+
+        if (mBackgroundImage != null) {
+
+            final float centerX = mBackgroundImage.getWidth() / 2.0f;
+            final float centerY = mBackgroundImage.getHeight() / 2.0f;
+            final float depthZ = centerX;
+
+            Rotate3dAnimation rotation;
+
+            rotation = new Rotate3dAnimation(270, 360, centerX, centerY, depthZ, false);
+
+            if (currentFace == FRONT_FACE) {
+                //Show front
+            } else {
+                //show back
+            }
+
+            rotation.setDuration(500);
+            rotation.setFillAfter(true);
+            rotation.setInterpolator(new DecelerateInterpolator());
+            rotation.setAnimationListener(new SecondHalfRotationCompleted());
+
+            mBackgroundImage.startAnimation(rotation);
+
+        }
+
+    }
+
+    /**
+     * This class listens for the end of the first half of the animation.
+     * It then posts a new action that effectively swaps the views when the container
+     * is rotated 90 degrees and thus invisible.
+     */
+    private final class FirstHalfRotationCompleted implements Animation.AnimationListener {
+
+        public void onAnimationStart(Animation animation) {
+        }
+
+        public void onAnimationEnd(Animation animation) {
+            if (mBackgroundImage != null) {
+                mBackgroundImage.post(new Runnable() {
+                    public void run() {
+                        startSecondHalfRotation();
+                    }
+                });
+            }
+        }
+
+        public void onAnimationRepeat(Animation animation) {
+        }
+
+    }
+
+    /**
+     * This class listens for the end of the second half of the animation.
+     * It then shows the WebView where is possible to do a zoom
+     */
+    private final class SecondHalfRotationCompleted implements Animation.AnimationListener {
+
+        public void onAnimationStart(Animation animation) {
+        }
+
+        public void onAnimationEnd(Animation animation) {
+            if (currentFace == FRONT_FACE) {
+                currentFace = BACK_FACE;
+            } else {
+                currentFace = FRONT_FACE;
+            }
+        }
+
+        public void onAnimationRepeat(Animation animation) {
+        }
+
+    }
+
     private void displayDailyWeather(final DailyWeather dailyWeather) {
-        //TODO - show daily weather.
         Log.i(TAG, "DailyWeather " + dailyWeather.toString());
         initializeRecyclerView(dailyWeather.getData());
 
@@ -171,7 +298,8 @@ public class DailyConditionsFragment extends BaseFragment implements HomeActivit
     }
 
     private void itemClicked(int position) {
-        if (mDailyConditionsAdapter != null) {
+        if (mDailyConditionsAdapter != null && position != mDetailsPosition) {
+            mDetailsPosition = position;
             DailyWeather.DailyData data = mDailyConditionsAdapter.getItem(position);
             Logger.i(TAG, "Data selected " + data.toString());
             setDailyDetailsView(data);
