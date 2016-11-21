@@ -8,7 +8,7 @@
         >
 
         <activity
-            android:name="com.neek.tech.permissions.runtime_permission.PermissionsActivity"
+            android:name="com.neek.tech.suite.permissions.runtime_permission.PermissionsActivity"
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTask"
             android:screenOrientation="nosensor"

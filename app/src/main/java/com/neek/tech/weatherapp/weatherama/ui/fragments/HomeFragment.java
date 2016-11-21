@@ -81,7 +81,8 @@ public class HomeFragment extends BaseFragment {
             }
         });
 
-        ArrayList<BaseFragment> mFragments = new ArrayList<>(4);
+        //TODO - if you add MinuteWeather to mFragments, then increment mFragment size by 1.
+        ArrayList<BaseFragment> mFragments = new ArrayList<>(3);
         mFragments.add(CurrentConditionsFragment.newInstance());
 //        mFragments.add(MinutelyConditionsFragment.newInstance());
         mFragments.add(HourlyConditionsFragment.newInstance());

@@ -100,8 +100,6 @@ public class HourlyConditionsFragment extends BaseFragment implements HomeActivi
     }
 
     private void displayHourlyWeather(final HourlyWeather hourlyWeather) {
-        //TODO - Show hourly weather
-
         Log.i(TAG, "Hourly weather " + hourlyWeather.toString());
 
         if (mHourlyAdapter == null) {

@@ -2,7 +2,7 @@ package com.neek.tech.weatherapp.weatherama;
 
 import android.app.Application;
 
-import com.neek.tech.permissions.runtime_permission.PermissionUtils;
+import com.neek.tech.suite.permissions.runtime_permission.PermissionUtils;
 import com.neek.tech.weatherapp.weatherama.controllers.WeatherController;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 import com.neek.tech.weatherapp.weatherama.utilities.WeatheramaPreferences;
