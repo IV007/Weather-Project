@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.neek.tech.permissions.runtime_permission.PermissionConstants;
-import com.neek.tech.permissions.runtime_permission.PermissionUtils;
+import com.neek.tech.suite.permissions.runtime_permission.PermissionConstants;
+import com.neek.tech.suite.permissions.runtime_permission.PermissionUtils;
 import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.base.BaseFragment;
 import com.neek.tech.weatherapp.weatherama.ui.activities.RuntimePermissionActivity;

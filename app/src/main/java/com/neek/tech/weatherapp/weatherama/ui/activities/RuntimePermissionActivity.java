@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.neek.tech.permissions.runtime_permission.PermissionConstants;
+import com.neek.tech.suite.permissions.runtime_permission.PermissionConstants;
 import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.base.BaseActivity;
 import com.neek.tech.weatherapp.weatherama.ui.fragments.RuntimeLocationPermissionFragment;

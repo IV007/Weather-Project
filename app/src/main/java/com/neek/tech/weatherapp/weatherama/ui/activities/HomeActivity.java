@@ -6,9 +6,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-import com.neek.tech.permissions.runtime_permission.PermissionConstants;
-import com.neek.tech.permissions.runtime_permission.PermissionUtils;
+import com.neek.tech.suite.permissions.runtime_permission.PermissionConstants;
+import com.neek.tech.suite.permissions.runtime_permission.PermissionUtils;
 import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.weatherama.WeatherLocationManager;
 import com.neek.tech.weatherapp.weatherama.base.BaseActivity;
@@ -23,12 +24,17 @@ import com.neek.tech.weatherapp.weatherama.utilities.WeatheramaPreferences;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+
 public class HomeActivity extends BaseActivity implements
         WeatherController.HomeActivityView,
         WeatherLocationManager.LocationUpdater,
         PermissionUtils.PermissionListener {
 
     private static final String TAG = "HomeActivity";
+
+    @BindView(R.id.error_message_textview)
+    protected TextView mEmptyMessageTextView;
 
     /**
      * Listener to notify fragments when new data is retrieved
