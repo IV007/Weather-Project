@@ -1,4 +1,4 @@
-package com.neek.tech.permissions.runtime_permission;
+package com.neek.tech.suite.permissions.runtime_permission;
 
 import android.Manifest;
 

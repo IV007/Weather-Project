@@ -1,4 +1,4 @@
-package com.neek.tech.permissions.runtime_permission;
+package com.neek.tech.suite.permissions.runtime_permission;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,10 +8,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
-import com.neek.tech.permissions.listeners.PermissionDenied;
-import com.neek.tech.permissions.listeners.PermissionGranted;
-import com.neek.tech.permissions.listeners.PermissionListener;
-import com.neek.tech.permissions.listeners.PermissionRequest;
+import com.neek.tech.suite.permissions.listeners.PermissionDenied;
+import com.neek.tech.suite.permissions.listeners.PermissionGranted;
+import com.neek.tech.suite.permissions.listeners.PermissionListener;
+import com.neek.tech.suite.permissions.listeners.PermissionRequest;
 
 /**
  * Created by ivanutsalo on 11/8/16.

@@ -1,6 +1,6 @@
-package com.neek.tech.permissions.listeners;
+package com.neek.tech.suite.permissions.listeners;
 
-import com.neek.tech.permissions.runtime_permission.RationaleRequest;
+import com.neek.tech.suite.permissions.runtime_permission.RationaleRequest;
 
 /**
  * @author <a href="mailto:ivan.utsalo@accesscfa.com">Ivan Utsalo</a>

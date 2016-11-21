@@ -1,4 +1,4 @@
-package com.neek.tech.permissions.runtime_permission;
+package com.neek.tech.suite.permissions.runtime_permission;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
 
-import com.neek.tech.permissions.listeners.PermissionDenied;
-import com.neek.tech.permissions.listeners.PermissionGranted;
-import com.neek.tech.permissions.listeners.PermissionListener;
-import com.neek.tech.permissions.listeners.PermissionRequest;
+import com.neek.tech.suite.permissions.listeners.PermissionDenied;
+import com.neek.tech.suite.permissions.listeners.PermissionGranted;
+import com.neek.tech.suite.permissions.listeners.PermissionListener;
+import com.neek.tech.suite.permissions.listeners.PermissionRequest;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

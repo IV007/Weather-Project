@@ -1,4 +1,4 @@
-package com.neek.tech.permissions.listeners;
+package com.neek.tech.suite.permissions.listeners;
 
 import android.support.annotation.NonNull;
 
