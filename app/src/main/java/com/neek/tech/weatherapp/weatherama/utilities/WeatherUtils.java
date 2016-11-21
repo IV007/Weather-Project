@@ -71,7 +71,7 @@ public class WeatherUtils {
     /**
      * Format supplied time with timezone supplied using format "9:30 AM"
      */
-    public String getFormattedTime(final String timeZone, final long time) {
+    public static String getFormattedTime(final String timeZone, final long time) {
 
         SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.ENGLISH);
         formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
@@ -160,7 +160,7 @@ public class WeatherUtils {
      * @return int value.
      */
     public static String getTemperature(final double temp) {
-        return String.format("%s %s", (int) Math.round(temp), "°F");
+        return String.format("%s%s", (int) Math.round(temp), "°F");
     }
 
     /**
