@@ -81,64 +81,64 @@ public class DailyWeather implements Serializable {
         private long sunsetTime;
 
         @SerializedName("moonPhase")
-        private double moonPhase;
+        private Double moonPhase;
 
         @SerializedName("precipIntensity")
-        private double precipIntensity;
+        private Double precipIntensity;
 
         @SerializedName("precipIntensityMax")
-        private double precipIntensityMax;
+        private Double precipIntensityMax;
 
         @SerializedName("precipProbability")
-        private double precipProbability;
+        private Double precipProbability;
 
         @SerializedName("temperatureMin")
-        private double temperatureMin;
+        private Double temperatureMin;
 
         @SerializedName("temperatureMinTime")
         private long temperatureMinTime;
 
         @SerializedName("temperatureMax")
-        private double temperatureMax;
+        private Double temperatureMax;
 
         @SerializedName("temperatureMaxTime")
         private long temperatureMaxTime;
 
         @SerializedName("apparentTemperatureMin")
-        private double apparentTemperatureMin;
+        private Double apparentTemperatureMin;
 
         @SerializedName("apparentTemperatureMinTime")
         private long apparentTemperatureMinTime;
 
         @SerializedName("apparentTemperatureMax")
-        private double apparentTemperatureMax;
+        private Double apparentTemperatureMax;
 
         @SerializedName("apparentTemperatureMaxTime")
         private long apparentTemperatureMaxTime;
 
         @SerializedName("dewPoint")
-        private double dewPoint;
+        private Double dewPoint;
 
         @SerializedName("humidity")
-        private double humidity;
+        private Double humidity;
 
         @SerializedName("windSpeed")
-        private double windSpeed;
+        private Double windSpeed;
 
         @SerializedName("windBearing")
         private int windBearing;
 
         @SerializedName("visibility")
-        private double visibility;
+        private Double visibility;
 
         @SerializedName("cloudCover")
-        private double cloudCover;
+        private Double cloudCover;
 
         @SerializedName("pressure")
-        private double pressure;
+        private Double pressure;
 
         @SerializedName("ozone")
-        private double ozone;
+        private Double ozone;
 
         @SerializedName("precipIntensityMaxTime")
         private long precipIntensityMaxTime;
@@ -241,7 +241,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The moonPhase
          */
-        public double getMoonPhase() {
+        public Double getMoonPhase() {
             return moonPhase;
         }
 
@@ -250,7 +250,7 @@ public class DailyWeather implements Serializable {
          * @param moonPhase
          * The moonPhase
          */
-        public void setMoonPhase(double moonPhase) {
+        public void setMoonPhase(Double moonPhase) {
             this.moonPhase = moonPhase;
         }
 
@@ -259,7 +259,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The precipIntensity
          */
-        public double getPrecipIntensity() {
+        public Double getPrecipIntensity() {
             return precipIntensity;
         }
 
@@ -268,7 +268,7 @@ public class DailyWeather implements Serializable {
          * @param precipIntensity
          * The precipIntensity
          */
-        public void setPrecipIntensity(double precipIntensity) {
+        public void setPrecipIntensity(Double precipIntensity) {
             this.precipIntensity = precipIntensity;
         }
 
@@ -277,7 +277,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The precipIntensityMax
          */
-        public double getPrecipIntensityMax() {
+        public Double getPrecipIntensityMax() {
             return precipIntensityMax;
         }
 
@@ -286,7 +286,7 @@ public class DailyWeather implements Serializable {
          * @param precipIntensityMax
          * The precipIntensityMax
          */
-        public void setPrecipIntensityMax(double precipIntensityMax) {
+        public void setPrecipIntensityMax(Double precipIntensityMax) {
             this.precipIntensityMax = precipIntensityMax;
         }
 
@@ -295,7 +295,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The precipProbability
          */
-        public double getPrecipProbability() {
+        public Double getPrecipProbability() {
             return precipProbability;
         }
 
@@ -304,7 +304,7 @@ public class DailyWeather implements Serializable {
          * @param precipProbability
          * The precipProbability
          */
-        public void setPrecipProbability(double precipProbability) {
+        public void setPrecipProbability(Double precipProbability) {
             this.precipProbability = precipProbability;
         }
 
@@ -313,7 +313,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The temperatureMin
          */
-        public double getTemperatureMin() {
+        public Double getTemperatureMin() {
             return temperatureMin;
         }
 
@@ -322,7 +322,7 @@ public class DailyWeather implements Serializable {
          * @param temperatureMin
          * The temperatureMin
          */
-        public void setTemperatureMin(double temperatureMin) {
+        public void setTemperatureMin(Double temperatureMin) {
             this.temperatureMin = temperatureMin;
         }
 
@@ -349,7 +349,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The temperatureMax
          */
-        public double getTemperatureMax() {
+        public Double getTemperatureMax() {
             return temperatureMax;
         }
 
@@ -358,7 +358,7 @@ public class DailyWeather implements Serializable {
          * @param temperatureMax
          * The temperatureMax
          */
-        public void setTemperatureMax(double temperatureMax) {
+        public void setTemperatureMax(Double temperatureMax) {
             this.temperatureMax = temperatureMax;
         }
 
@@ -385,7 +385,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The apparentTemperatureMin
          */
-        public double getApparentTemperatureMin() {
+        public Double getApparentTemperatureMin() {
             return apparentTemperatureMin;
         }
 
@@ -394,7 +394,7 @@ public class DailyWeather implements Serializable {
          * @param apparentTemperatureMin
          * The apparentTemperatureMin
          */
-        public void setApparentTemperatureMin(double apparentTemperatureMin) {
+        public void setApparentTemperatureMin(Double apparentTemperatureMin) {
             this.apparentTemperatureMin = apparentTemperatureMin;
         }
 
@@ -421,7 +421,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The apparentTemperatureMax
          */
-        public double getApparentTemperatureMax() {
+        public Double getApparentTemperatureMax() {
             return apparentTemperatureMax;
         }
 
@@ -430,7 +430,7 @@ public class DailyWeather implements Serializable {
          * @param apparentTemperatureMax
          * The apparentTemperatureMax
          */
-        public void setApparentTemperatureMax(double apparentTemperatureMax) {
+        public void setApparentTemperatureMax(Double apparentTemperatureMax) {
             this.apparentTemperatureMax = apparentTemperatureMax;
         }
 
@@ -457,7 +457,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The dewPoint
          */
-        public double getDewPoint() {
+        public Double getDewPoint() {
             return dewPoint;
         }
 
@@ -466,7 +466,7 @@ public class DailyWeather implements Serializable {
          * @param dewPoint
          * The dewPoint
          */
-        public void setDewPoint(double dewPoint) {
+        public void setDewPoint(Double dewPoint) {
             this.dewPoint = dewPoint;
         }
 
@@ -475,7 +475,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The humidity
          */
-        public double getHumidity() {
+        public Double getHumidity() {
             return humidity;
         }
 
@@ -484,7 +484,7 @@ public class DailyWeather implements Serializable {
          * @param humidity
          * The humidity
          */
-        public void setHumidity(double humidity) {
+        public void setHumidity(Double humidity) {
             this.humidity = humidity;
         }
 
@@ -493,7 +493,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The windSpeed
          */
-        public double getWindSpeed() {
+        public Double getWindSpeed() {
             return windSpeed;
         }
 
@@ -502,7 +502,7 @@ public class DailyWeather implements Serializable {
          * @param windSpeed
          * The windSpeed
          */
-        public void setWindSpeed(double windSpeed) {
+        public void setWindSpeed(Double windSpeed) {
             this.windSpeed = windSpeed;
         }
 
@@ -529,7 +529,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The visibility
          */
-        public double getVisibility() {
+        public Double getVisibility() {
             return visibility;
         }
 
@@ -538,7 +538,7 @@ public class DailyWeather implements Serializable {
          * @param visibility
          * The visibility
          */
-        public void setVisibility(double visibility) {
+        public void setVisibility(Double visibility) {
             this.visibility = visibility;
         }
 
@@ -547,7 +547,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The cloudCover
          */
-        public double getCloudCover() {
+        public Double getCloudCover() {
             return cloudCover;
         }
 
@@ -556,7 +556,7 @@ public class DailyWeather implements Serializable {
          * @param cloudCover
          * The cloudCover
          */
-        public void setCloudCover(double cloudCover) {
+        public void setCloudCover(Double cloudCover) {
             this.cloudCover = cloudCover;
         }
 
@@ -565,7 +565,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The pressure
          */
-        public double getPressure() {
+        public Double getPressure() {
             return pressure;
         }
 
@@ -574,7 +574,7 @@ public class DailyWeather implements Serializable {
          * @param pressure
          * The pressure
          */
-        public void setPressure(double pressure) {
+        public void setPressure(Double pressure) {
             this.pressure = pressure;
         }
 
@@ -583,7 +583,7 @@ public class DailyWeather implements Serializable {
          * @return
          * The ozone
          */
-        public double getOzone() {
+        public Double getOzone() {
             return ozone;
         }
 
@@ -592,7 +592,7 @@ public class DailyWeather implements Serializable {
          * @param ozone
          * The ozone
          */
-        public void setOzone(double ozone) {
+        public void setOzone(Double ozone) {
             this.ozone = ozone;
         }
 

@@ -3,9 +3,8 @@ package com.neek.tech.weatherapp.weatherama.utilities;
 import java.util.regex.Pattern;
 
 /**
- * Created by ivanutsalo on 11/13/16.
+ * @author <a href="mailto:utsaloosi@gmail.com">Ivan Utsalo</a>
  */
-
 public class StringUtils {
 
     private static final String HTML_TAG_PATTERN = "(?i)(<[^\\s]+>)(.+?)(</[^\\s]+>)";

@@ -8,6 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ActionButtonOverflow" parent="android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_action_custom_overflow</item>
+    </style>
 
     <style name="SettingsCheckBox" parent="Theme.AppCompat.Light">
         <item name="android:colorControlNormal" tools:targetApi="lollipop">@color/tab_unselected</item>

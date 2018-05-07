@@ -8,9 +8,8 @@ import android.text.TextUtils;
 import android.view.View;
 
 /**
- * Created by ivanutsalo on 11/7/16.
+ * @author <a href="mailto:utsaloosi@gmail.com">Ivan Utsalo</a>
  */
-
 public class WeatherErrorDialog extends DialogFragment implements View.OnClickListener {
 
     public static final String TAG = WeatherErrorDialog.class.getSimpleName();

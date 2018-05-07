@@ -1,4 +1,4 @@
-package com.neek.tech.weatherapp.weatherama.model.weather;
+package com.neek.tech.weatherapp.weatherama.model.user;
 
 /**
  * Created by ivanutsalo on 11/11/16.

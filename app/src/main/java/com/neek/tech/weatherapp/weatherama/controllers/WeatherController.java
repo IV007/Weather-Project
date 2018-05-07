@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.neek.tech.weatherapp.weatherama.base.BaseView;
-import com.neek.tech.weatherapp.weatherama.model.weather.ReverseGeocodeAddress;
+import com.neek.tech.weatherapp.weatherama.model.user.ReverseGeocodeAddress;
 import com.neek.tech.weatherapp.weatherama.model.weather.Weather;
 import com.neek.tech.weatherapp.weatherama.service.WeatherService;
 import com.neek.tech.weatherapp.weatherama.service.WeatherUpdater;
@@ -152,13 +152,29 @@ public class WeatherController implements WeatherUpdater {
 
             if (mappedAddress != null && mappedAddress.size() > 0) {
 
+                //If user has selected an address, add it as first item in list to be displayed
+                if (!TextUtils.isEmpty(singleton.mSelectedAddress)) {
+
+                    for (ReverseGeocodeAddress address : mappedAddress) {
+                        if (address.getKey().equalsIgnoreCase(singleton.mSelectedAddress)) {
+                            result = new ArrayList<>();
+                            result.add(address.getKey());
+                            break;
+                        }
+                    }
+
+                }
+
+                //Add other items to list
                 for (int i = mappedAddress.size() - 1; i >= 0; i--) {
                     ReverseGeocodeAddress address = mappedAddress.get(i);
                     if (result == null) {
                         result = new ArrayList<>();
                     }
 
-                    result.add(address.getKey());
+                    if (!result.contains(address.getKey())) {
+                        result.add(address.getKey());
+                    }
                 }
             }
         }

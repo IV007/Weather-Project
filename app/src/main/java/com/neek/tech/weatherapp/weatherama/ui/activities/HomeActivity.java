@@ -107,8 +107,14 @@ public class HomeActivity extends BaseActivity implements
         if (item.getItemId() == R.id.menu_settings) {
             //Show settings Activity.
             startActivity(new Intent(this, SettingsActivity.class));
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 
     private void fetchWeatherData(final Location location) {

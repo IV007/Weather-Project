@@ -83,4 +83,8 @@ public abstract class BaseFragment extends Fragment implements BaseView {
             ((BaseActivity) getActivity()).showProgressDialog();
         }
     }
+
+    public boolean onBackPressed() {
+        return true;
+    }
 }

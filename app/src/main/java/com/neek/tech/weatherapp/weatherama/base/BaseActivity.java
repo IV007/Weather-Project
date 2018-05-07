@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -47,7 +48,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     @Override
     protected void onResume() {
         super.onResume();
-        if (!LocationUtils.isLocationServicesEnabled(this))
+        if (!LocationUtils.isGPSEnabled(this))
             showGpsDisabledDialog();
 
     }
@@ -154,7 +155,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     }
 
     /**
-     * Pops backstack
+     * Pops back stack
      */
     public void popBackStack() {
 
@@ -162,7 +163,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
             FragmentManager fragmentManager = getSupportFragmentManager();
 
-            if (fragmentManager.getBackStackEntryCount() > 0) {
+            if (fragmentManager.getBackStackEntryCount() > 1) {
                 fragmentManager.popBackStackImmediate();
             }
 
@@ -176,6 +177,23 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
     }
 
+    /**
+     * Try to get fragment in the top of the stack
+     */
+    protected BaseFragment getTopFragment() {
+
+        FragmentManager fm = getSupportFragmentManager();
+        // If there are remaining fragment on the stack try to set the new title
+        if (fm.getBackStackEntryCount() > 0) {
+
+            String name = fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1).getName();
+            Fragment fragmentByTag = fm.findFragmentByTag(name);
+            return (fragmentByTag instanceof BaseFragment) ? (BaseFragment) fragmentByTag : null;
+
+        }
+
+        return null;
+    }
 
     /**
      * Fragment to stack addition
@@ -260,5 +278,26 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         return result;
     }
 
+    @Override
+    public void onBackPressed() {
+
+        try {
+
+            // Fragment decides if the back pressed will be handled with custom implementation or not
+            BaseFragment topFragment = getTopFragment();
+            if (topFragment != null && !topFragment.onBackPressed()) {
+                return;
+            }
+
+            // Super.onBackPressed already handles a call to PopBackStack (Main implementation of Fragment by android)
+            // So first make this "native" call and later refresh the custom view of actionBar
+            super.onBackPressed();
+
+            invalidateOptionsMenu();
+
+        } catch (Exception exception) {
+            Logger.logException(TAG, exception);
+        }
+    }
 
 }

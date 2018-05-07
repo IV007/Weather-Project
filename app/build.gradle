@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        debug{
+        debug {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
             storeFile file('/Users/ivanutsalo/debug.keystore')
@@ -46,12 +46,12 @@ android {
         def BUILD_DATE = "\"${new Date().format("MMdd")}\""
 
 
-        free{
+        free {
             applicationId "com.neek.tech.weatherapp"
             resValue STRING, "app_name", 'Weatherama.Free' + BUILD_DATE
         }
 
-        premium{
+        premium {
             applicationId "com.neek.tech.weatherapp"
             resValue STRING, "app_name", 'Weatherama.Premium'
         }
@@ -72,7 +72,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.2'
     compile 'com.jakewharton:butterknife:8.4.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.google.code.findbugs:jsr305:2.0.1'
+    compile 'com.android.support:support-v4:24.2.1'
     testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 }

@@ -6,11 +6,9 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 /**
- * Created by ivanutsalo on 11/10/16.
+ * Shared prefs for app.
  */
-
 public class WeatheramaPreferences {
-
 
     private static final String LOCATION_PERMISSION_PERMANENTLY_DENIED = "LocationPermissionDenied";
     private static final String LOCATION_PERMISSION_ACCEPTED = "LocationPermissionAccepted";
@@ -20,13 +18,13 @@ public class WeatheramaPreferences {
     private static final String GEOCODE_ADDRESSES = "GEOCODE_ADDRESSES";
     private static final String SELECTED_ADDRESS = "SELECTED_ADDRESS";
     private static final String USER_ENABLED_SELECTED_ADDRESS = "USER_ENABLED_SELECTED_ADDRESS";
+    private static final String SELECTED_TEMPERATURE_SCALE = "SELECTED_TEMPERATURE_SCALE";
 
-
-    public static SharedPreferences getSharedPreferences(Context context) {
+    private static SharedPreferences getSharedPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public static SharedPreferences.Editor editSharedPreferences(Context context) {
+    private static SharedPreferences.Editor editSharedPreferences(Context context) {
         return getSharedPreferences(context).edit();
     }
 
@@ -93,5 +91,13 @@ public class WeatheramaPreferences {
 
     public static boolean didUserEnableSelectedAddress(Context context){
         return getSharedPreferences(context).getBoolean(USER_ENABLED_SELECTED_ADDRESS, false);
+    }
+
+    public static boolean setCurrentTemperatureScale(Context context, int scale){
+        return editSharedPreferences(context).putInt(SELECTED_TEMPERATURE_SCALE, scale).commit();
+    }
+
+    public static int getCurrentTemperatureScale(Context context){
+        return getSharedPreferences(context).getInt(SELECTED_TEMPERATURE_SCALE, 0);
     }
 }

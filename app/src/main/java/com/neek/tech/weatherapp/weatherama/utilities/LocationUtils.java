@@ -13,7 +13,22 @@ public class LocationUtils {
     public static final long UPDATE_TIME = 1000 * 60 * 60; // 1 hour
 
 
-    public static boolean isLocationServicesEnabled(Context context) {
+    public static boolean isGPSEnabled(Context context) {
+        boolean ret = false;
+        boolean gpsEnabled;
+
+        if (context != null) {
+            LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            if (lm != null) {
+                gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                ret = gpsEnabled;
+            }
+        }
+
+        return ret;
+    }
+
+    public static boolean isGPSAndNetworkLocationEnabled(Context context) {
         boolean ret = false;
         boolean gpsEnabled, networkEnabled;
 

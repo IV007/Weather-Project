@@ -78,6 +78,18 @@ public class DailyConditionsFragment extends BaseFragment implements HomeActivit
     @BindView(R.id.windSpeedLabel)
     protected TextView mWindSpeedLabel;
 
+    @BindView(R.id.hiTempText)
+    protected TextView mHiTempText;
+
+    @BindView(R.id.loTempText)
+    protected TextView mLoTempText;
+
+    @BindView(R.id.rainText)
+    protected TextView mRainText;
+
+    @BindView(R.id.windSpeedText)
+    protected TextView mWindSpeedText;
+
     @BindView(R.id.dailyDetailsIcon)
     protected ImageView mDailyDetailsIcon;
 
@@ -90,6 +102,10 @@ public class DailyConditionsFragment extends BaseFragment implements HomeActivit
     private SparseBooleanArray selectedItems;
 
     private DailyConditionsAdapter mDailyConditionsAdapter;
+
+    private DailyWeather.DailyData mSelectedDailyData;
+
+    private String mTimeZone;
 
     /**
      * Position for current detail position.
@@ -147,6 +163,7 @@ public class DailyConditionsFragment extends BaseFragment implements HomeActivit
     @Override
     public void onWeatherRetrieved(Weather weather) {
         if (weather != null && weather.getDailyWeather() != null) {
+            mTimeZone = weather.getTimezone();
             displayDailyWeather(weather.getDailyWeather());
         }
     }
@@ -156,7 +173,7 @@ public class DailyConditionsFragment extends BaseFragment implements HomeActivit
         startAnimation();
     }
 
-    private void startAnimation(){
+    private void startAnimation() {
 
         if (mBackgroundImage != null) {
 
@@ -195,8 +212,10 @@ public class DailyConditionsFragment extends BaseFragment implements HomeActivit
 
             if (currentFace == FRONT_FACE) {
                 //Show front
+                setDailyDetailsView(mSelectedDailyData);
             } else {
                 //show back
+                showBackDetails();
             }
 
             rotation.setDuration(500);
@@ -295,14 +314,27 @@ public class DailyConditionsFragment extends BaseFragment implements HomeActivit
                 mDailyConditionsAdapter.setNewDailyDataList(dailyDataArrayList);
         }
         mDailyRecyclerView.setAdapter(mDailyConditionsAdapter);
+
+        //Sets first item selected and updates details with first item from list
+        if (dailyDataArrayList != null && dailyDataArrayList.size() > 0) {
+            mDetailsPosition = 0;
+            mSelectedDailyData = dailyDataArrayList.get(0);
+            updateBooleanArray(mDetailsPosition, true);
+            setDailyDetailsView(mSelectedDailyData);
+            startLayoutSlideAnimation();
+
+        }
     }
 
     private void itemClicked(int position) {
         if (mDailyConditionsAdapter != null && position != mDetailsPosition) {
             mDetailsPosition = position;
-            DailyWeather.DailyData data = mDailyConditionsAdapter.getItem(position);
-            Logger.i(TAG, "Data selected " + data.toString());
-            setDailyDetailsView(data);
+            mSelectedDailyData = mDailyConditionsAdapter.getItem(position);
+
+            Logger.i(TAG, "Data selected " + mSelectedDailyData.toString());
+            setDailyDetailsView(mSelectedDailyData);
+            startLayoutSlideAnimation();
+
         }
 
     }
@@ -314,36 +346,40 @@ public class DailyConditionsFragment extends BaseFragment implements HomeActivit
                 mDailyDetailsSummaryLabel.setText(data.getSummary());
             }
 
-            if (data.getTemperatureMax() != 0 && mHiTempLabel != null) {
+            if (mHiTempLabel != null && mHiTempText != null) {
+                mHiTempText.setText(getString(R.string.hi_temp));
                 mHiTempLabel.setText(WeatherUtils.getTemperature(data.getTemperatureMax()));
             }
 
-            if (mLoTempLabel != null) {
+            if (mLoTempLabel != null && mLoTempText != null) {
+                mLoTempText.setText(getString(R.string.lo_temp));
                 mLoTempLabel.setText(WeatherUtils.getTemperature(data.getTemperatureMin()));
             }
 
-            if (mWindSpeedLabel != null) {
+            if (mWindSpeedLabel != null && mWindSpeedText != null) {
+                mWindSpeedText.setText(getString(R.string.wind_speed));
                 mWindSpeedLabel.setText(WeatherUtils.getTemperature(data.getWindSpeed()));
             }
 
-            if (mRainLabel != null) {
+            if (mRainLabel != null && mRainText != null) {
+                mRainText.setText(getString(R.string.rain));
                 mRainLabel.setText(WeatherUtils.getPrecipProbability(data.getPrecipProbability()));
             }
 
-            if(!TextUtils.isEmpty(data.getIcon()) && mDailyDetailsIcon != null){
+            if (!TextUtils.isEmpty(data.getIcon()) && mDailyDetailsIcon != null) {
                 mDailyDetailsIcon.setImageDrawable(WeatherUtils.getIconId(getActivity(), data.getIcon()));
             }
 
             if (!TextUtils.isEmpty(data.getIcon()) && mDailyDetailsRootLayout != null) {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    mBackgroundImage.setBackground(WeatherUtils.setLayoutBackground(getActivity(), data.getIcon()));
+                    mBackgroundImage.setImageDrawable(WeatherUtils.setLayoutBackground(getActivity(), data.getIcon()));
                 } else {
                     mBackgroundImage.setBackgroundResource(WeatherUtils.setLayoutBackgroundResource(data.getIcon()));
 
                 }
 
-                if (data.getIcon().equalsIgnoreCase("snow")){
+                if (data.getIcon().equalsIgnoreCase("snow")) {
                     mHiTempLabel.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
                     mLoTempLabel.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
                     mWindSpeedLabel.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
@@ -356,14 +392,75 @@ public class DailyConditionsFragment extends BaseFragment implements HomeActivit
                     mRainLabel.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
 
                 }
-                Animation slideUp = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up_from_bottom_with_accelerate_decelerate);
-                mDailyDetailsRootLayout.startAnimation(slideUp);
             }
-
 
         }
     }
 
+    private void startLayoutSlideAnimation() {
+        Animation slideUp = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up_from_bottom_with_accelerate_decelerate);
+        mDailyDetailsRootLayout.startAnimation(slideUp);
+    }
+
+
+    private void showBackDetails(){
+        if (mSelectedDailyData != null){
+
+            if (mHiTempLabel != null && mHiTempText != null) {
+                mHiTempText.setText("Sunrise");
+                mHiTempLabel.setText(WeatherUtils.getFormattedTime(mTimeZone, mSelectedDailyData.getSunriseTime()));
+            }
+
+            if (mLoTempLabel != null && mLoTempText != null) {
+                mLoTempText.setText("Sunset");
+                mLoTempLabel.setText(WeatherUtils.getFormattedTime(mTimeZone, mSelectedDailyData.getSunsetTime()));
+            }
+
+            if (mWindSpeedLabel != null && mWindSpeedText != null) {
+                mWindSpeedText.setText("Pressure");
+                mWindSpeedLabel.setText(String.format("%s", mSelectedDailyData.getPressure()));
+            }
+
+            if (mRainLabel != null && mRainText != null) {
+                mRainText.setText("Visibility");
+                mRainLabel.setText(String.format("%s", mSelectedDailyData.getVisibility()));
+            }
+
+            if (!TextUtils.isEmpty(mSelectedDailyData.getIcon()) && mDailyDetailsIcon != null) {
+                mDailyDetailsIcon.setImageDrawable(WeatherUtils.getIconId(getActivity(), mSelectedDailyData.getIcon()));
+            }
+
+            if (!TextUtils.isEmpty(mSelectedDailyData.getIcon()) && mDailyDetailsRootLayout != null) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    mBackgroundImage.setBackground(WeatherUtils.setLayoutBackground(getActivity(), mSelectedDailyData.getIcon()));
+                } else {
+                    mBackgroundImage.setBackgroundResource(WeatherUtils.setLayoutBackgroundResource(mSelectedDailyData.getIcon()));
+
+                }
+
+                if (mSelectedDailyData.getIcon().equalsIgnoreCase("snow")) {
+                    mHiTempLabel.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+                    mLoTempLabel.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+                    mWindSpeedLabel.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+                    mRainLabel.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+
+                } else {
+                    mHiTempLabel.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
+                    mLoTempLabel.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
+                    mWindSpeedLabel.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
+                    mRainLabel.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
+
+                }
+            }
+
+        }
+
+    }
+
+    /**
+     *
+     */
     public class DailyConditionsAdapter extends RecyclerView.Adapter<DailyConditionsViewHolder> {
 
         private ArrayList<DailyWeather.DailyData> dailyDataList;

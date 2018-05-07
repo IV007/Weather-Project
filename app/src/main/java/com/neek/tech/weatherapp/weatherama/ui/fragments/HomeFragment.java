@@ -12,7 +12,6 @@ import android.view.View;
 import com.neek.tech.weatherapp.R;
 import com.neek.tech.weatherapp.ui.SlidingTabLayout;
 import com.neek.tech.weatherapp.weatherama.base.BaseFragment;
-import com.neek.tech.weatherapp.weatherama.model.weather.Weather;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 
 import java.util.ArrayList;
@@ -32,12 +31,8 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.pagerHeader)
     SlidingTabLayout mSlidingTabLayout;
 
-
-    private Weather mWeather;
-
-    public static HomeFragment newInstance(/*Weather weather*/) {
+    public static HomeFragment newInstance() {
         Bundle b = new Bundle();
-//        b.putSerializable(TAG, weather);
         HomeFragment frag = new HomeFragment();
         frag.setArguments(b);
         return frag;
@@ -48,9 +43,6 @@ public class HomeFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         Logger.create(TAG);
 
-        if (getArguments() != null && getArguments().containsKey(TAG)) {
-            mWeather = (Weather) getArguments().getSerializable(TAG);
-        }
     }
 
     @Override
@@ -141,4 +133,8 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public boolean onBackPressed() {
+        return super.onBackPressed();
+    }
 }

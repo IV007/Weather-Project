@@ -36,7 +36,7 @@ import com.neek.tech.weatherapp.weatherama.WeatherLocationManager;
 import com.neek.tech.weatherapp.weatherama.base.BaseActivity;
 import com.neek.tech.weatherapp.weatherama.base.BaseFragment;
 import com.neek.tech.weatherapp.weatherama.controllers.WeatherController;
-import com.neek.tech.weatherapp.weatherama.model.weather.ReverseGeocodeAddress;
+import com.neek.tech.weatherapp.weatherama.model.user.ReverseGeocodeAddress;
 import com.neek.tech.weatherapp.weatherama.utilities.Logger;
 import com.neek.tech.weatherapp.weatherama.utilities.WeatheramaDialog;
 

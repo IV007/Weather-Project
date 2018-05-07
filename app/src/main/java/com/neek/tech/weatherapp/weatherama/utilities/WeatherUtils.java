@@ -114,6 +114,8 @@ public class WeatherUtils {
                     gradientDrawable = ContextCompat.getDrawable(context, R.drawable.ic_snow);
                     break;
 
+                default:
+                    break;
             }
 
         }
@@ -146,6 +148,9 @@ public class WeatherUtils {
                 case "rain":
                     gradientDrawable = R.drawable.bg_gradient_light_rain;
                     break;
+
+                default:
+                    break;
             }
 
 
@@ -159,7 +164,8 @@ public class WeatherUtils {
      * @param temp temperature to be rounded up
      * @return int value.
      */
-    public static String getTemperature(final double temp) {
+    public static String getTemperature(final Double temp) {
+        if (temp == null) return "--";
         return String.format("%s%s", (int) Math.round(temp), "°F");
     }
 
@@ -169,7 +175,8 @@ public class WeatherUtils {
      * @param precipChance temperature to be rounded up
      * @return int value.
      */
-    public static String getPrecipProbability(final double precipChance) {
+    public static String getPrecipProbability(final Double precipChance) {
+        if (precipChance == null) return "--";
         return String.format ("%s %s", (int) Math.round(precipChance * 100), "%");
     }
 

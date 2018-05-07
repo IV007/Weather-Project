@@ -23,7 +23,7 @@
     <string name="enable_location_permission">Enable Location Services</string>
 
     <string name="use_my_location">Use my location</string>
-    <string name="enter_address_to_search">Search by Address/City/State/Zip</string>
+    <string name="enter_address_to_search">Search by City/State/Zip</string>
 
     <string name="current_conditions">Now</string>
     <string name="minutely_conditions">Minutely</string>
@@ -41,4 +41,12 @@
 
     <!--Empty Data-->
     <string name="empty_data_message">Couldn\'t retrieve data. \nFor some reason we\'re unable to retrieve your weather data. Please ensure your settings have been configured correctly and re-try.</string>
+    <string name="lo_temp">Lo-Temp</string>
+    <string name="rain">Rain?</string>
+    <string name="wind_speed">Wind Speed</string>
+    <string name="hi_temp">Hi-Temp</string>
+    <string name="see_more">See more</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

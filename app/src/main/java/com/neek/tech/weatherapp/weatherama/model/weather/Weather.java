@@ -1,5 +1,7 @@
 package com.neek.tech.weatherapp.weatherama.model.weather;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -37,6 +39,10 @@ public class Weather implements Serializable {
 
     @SerializedName("flags")
     private Flags flags;
+
+    @Nullable
+    @SerializedName("alerts")
+    private List<Alerts> alerts = new ArrayList<>();
 
     /**
      * @return The latitude
@@ -164,6 +170,25 @@ public class Weather implements Serializable {
         this.flags = flags;
     }
 
+    /**
+     *
+     * @return
+     * The alerts
+     */
+    public List<Alerts> getAlerts() {
+        return alerts;
+    }
+
+    /**
+     *
+     * @param alerts
+     * The alerts
+     */
+    public void setAlerts(List<Alerts> alerts) {
+        this.alerts = alerts;
+    }
+
+
 
     private class Flags implements Serializable {
 
@@ -279,6 +304,7 @@ public class Weather implements Serializable {
                 ", longitude=" + longitude + '\n' +
                 ", timezone='" + timezone + '\n' +
                 ", offset=" + offset + '\n' +
+                ", flags=" + flags + '\n' +
                 '}';
     }
 }
